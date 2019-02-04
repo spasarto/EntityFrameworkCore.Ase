@@ -85,8 +85,8 @@ namespace EntityFrameworkCore.Ase.Internal
         private readonly DateTimeOffsetTypeMapping _datetimeoffset
             = new DateTimeOffsetTypeMapping("datetimeoffset");
 
-        private readonly GuidTypeMapping _uniqueidentifier
-            = new GuidTypeMapping("uniqueidentifier", DbType.Guid);
+        private readonly AseGuidTypeMapping _uniqueidentifier
+            = new AseGuidTypeMapping();
 
         private readonly DecimalTypeMapping _decimal
             = new AseDecimalTypeMapping("decimal(18, 2)", precision: 18, scale: 2, storeTypePostfix: StoreTypePostfix.PrecisionAndScale);

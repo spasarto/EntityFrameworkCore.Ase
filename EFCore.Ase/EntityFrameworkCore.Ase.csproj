@@ -4,13 +4,14 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <LangVersion>7.2</LangVersion>
     <AssemblyName>EntityFrameworkCore.Ase</AssemblyName>
-    <Version>0.1.0</Version>
+    <Version>0.1.1</Version>
     <Description>A very barebones implementation of EntityFrameworkCore. Supports basic CRUD interactions. Lots of untested features.</Description>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageTags>EntityFrameworkCore ASE Sybase</PackageTags>
     <PackageLicenseUrl>https://opensource.org/licenses/MIT</PackageLicenseUrl>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
-    <PackageReleaseNotes>Init Release</PackageReleaseNotes>
+    <PackageReleaseNotes>Added support for guids</PackageReleaseNotes>
+    <AssemblyVersion>0.1.1.0</AssemblyVersion>
   </PropertyGroup>
 
   <ItemGroup>
