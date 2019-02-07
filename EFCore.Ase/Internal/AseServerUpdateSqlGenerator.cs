@@ -21,7 +21,7 @@ namespace EntityFrameworkCore.Ase.Internal
             SqlGenerationHelper.DelimitIdentifier(commandStringBuilder, columnModification.ColumnName);
             commandStringBuilder.Append(" = ");
 
-            commandStringBuilder.Append("scope_identity()");
+            commandStringBuilder.Append("@@IDENTITY");
         }
 
         protected override void AppendRowsAffectedWhereCondition(StringBuilder commandStringBuilder, int expectedRowsAffected)
