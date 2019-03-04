@@ -31,18 +31,32 @@ namespace EntityFrameworkCore.Ase.Internal
             {
                 _relationalCommandBuilder2.Value.Append("TOP ");
 
-                _relationalCommandBuilder2.Value.Append(ParameterValues[selectExpression.Limit.ToString()]);
+                if (selectExpression.Limit is ConstantExpression constantExpression)
+                {
+                    _relationalCommandBuilder2.Value.Append(constantExpression.Value);
+                }
+                else
+                {
+                    _relationalCommandBuilder2.Value.Append(ParameterValues[selectExpression.Limit.ToString()]);
+                }
 
                 _relationalCommandBuilder2.Value.Append(" ");
+            }
 
-                if (selectExpression.Offset != null)
+            if (selectExpression.Offset != null)
+            {
+                _relationalCommandBuilder2.Value.Append("START AT ");
+
+                if (selectExpression.Offset is ConstantExpression constantExpression)
                 {
-                    _relationalCommandBuilder2.Value.Append("START AT ");
-
-                    _relationalCommandBuilder2.Value.Append(ParameterValues[selectExpression.Offset.ToString()]);
-
-                    _relationalCommandBuilder2.Value.Append(" ");
+                    _relationalCommandBuilder2.Value.Append(constantExpression.Value);
                 }
+                else
+                {
+                    _relationalCommandBuilder2.Value.Append(ParameterValues[selectExpression.Offset.ToString()]);
+                }
+
+                _relationalCommandBuilder2.Value.Append(" ");
             }
         }
 
