@@ -35,9 +35,9 @@ namespace EntityFrameworkCore.Ase.Internal
                 {
                     _relationalCommandBuilder2.Value.Append(constantExpression.Value);
                 }
-                else
+                else if(ParameterValues.TryGetValue(selectExpression.Limit.ToString(), out object top))
                 {
-                    _relationalCommandBuilder2.Value.Append(ParameterValues[selectExpression.Limit.ToString()]);
+                    _relationalCommandBuilder2.Value.Append(top);
                 }
 
                 _relationalCommandBuilder2.Value.Append(" ");
@@ -51,9 +51,9 @@ namespace EntityFrameworkCore.Ase.Internal
                 {
                     _relationalCommandBuilder2.Value.Append(constantExpression.Value);
                 }
-                else
+                else if(ParameterValues.TryGetValue(selectExpression.Offset.ToString(), out object offset))
                 {
-                    _relationalCommandBuilder2.Value.Append(ParameterValues[selectExpression.Offset.ToString()]);
+                    _relationalCommandBuilder2.Value.Append(offset);
                 }
 
                 _relationalCommandBuilder2.Value.Append(" ");

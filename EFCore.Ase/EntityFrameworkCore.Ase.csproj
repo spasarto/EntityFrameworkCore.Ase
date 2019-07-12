@@ -1,19 +1,20 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <LangVersion>7.2</LangVersion>
+    <LangVersion>latest</LangVersion>
     <AssemblyName>EntityFrameworkCore.Ase</AssemblyName>
-    <Version>0.1.4</Version>
+    <Version>0.1.5</Version>
     <Description>A very barebones implementation of EntityFrameworkCore. Supports basic CRUD interactions. Lots of untested features.</Description>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageTags>EntityFrameworkCore ASE Sybase</PackageTags>
     <PackageLicenseUrl>https://opensource.org/licenses/MIT</PackageLicenseUrl>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
-    <PackageReleaseNotes>TOP,START AT support for ConstantExpressions</PackageReleaseNotes>
-    <AssemblyVersion>0.1.4.0</AssemblyVersion>
-    <FileVersion>0.1.4.0</FileVersion>
+    <PackageReleaseNotes>Bug fix with top/offset</PackageReleaseNotes>
+    <AssemblyVersion>0.1.5.0</AssemblyVersion>
+    <FileVersion>0.1.5.0</FileVersion>
     <PackageProjectUrl>https://github.com/spasarto/EntityFrameworkCore.Ase</PackageProjectUrl>
+    <Authors>Adam Johnson</Authors>
   </PropertyGroup>
 
   <ItemGroup>
