@@ -1,4 +1,5 @@
 ﻿using EntityFrameworkCore.Ase.Internal;
+using EntityFrameworkCore.Ase.Internal.ExpressionTranslators;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Query.ExpressionTranslators;
 using Microsoft.EntityFrameworkCore.Query.Sql;
@@ -19,31 +20,31 @@ namespace EntityFrameworkCore.Ase
                 .TryAdd<IValueGeneratorCache>(s => s.GetService<IAseValueGeneratorCache>())
                 .TryAdd<IRelationalTypeMappingSource, AseTypeMappingSource>()
                 .TryAdd<ISqlGenerationHelper, AseSqlGenerationHelper>()
-                //.TryAdd<IMigrationsAnnotationProvider, SqlServerMigrationsAnnotationProvider>()
-                //.TryAdd<IModelValidator, SqlServerModelValidator>()
-                //.TryAdd<IConventionSetBuilder, SqlServerConventionSetBuilder>()
+                //.TryAdd<IMigrationsAnnotationProvider, AseMigrationsAnnotationProvider>()
+                //.TryAdd<IModelValidator, AseModelValidator>()
+                //.TryAdd<IConventionSetBuilder, AseConventionSetBuilder>()
                 .TryAdd<IUpdateSqlGenerator>(p => p.GetService<IAseServerUpdateSqlGenerator>())
                 .TryAdd<ISingletonUpdateSqlGenerator>(p => p.GetService<IAseServerUpdateSqlGenerator>())
                 .TryAdd<IModificationCommandBatchFactory, AseModificationCommandBatchFactory>()
-                //.TryAdd<IValueGeneratorSelector, SqlServerValueGeneratorSelector>()
+                //.TryAdd<IValueGeneratorSelector, AseValueGeneratorSelector>()
                 .TryAdd<IRelationalConnection>(s => s.GetService<IAseRelationalConnection>())
-                //.TryAdd<IMigrationsSqlGenerator, SqlServerMigrationsSqlGenerator>()
-                //.TryAdd<IRelationalDatabaseCreator, SqlServerDatabaseCreator>()
-                //.TryAdd<IHistoryRepository, SqlServerHistoryRepository>()
-                //.TryAdd<ICompiledQueryCacheKeyGenerator, SqlServerCompiledQueryCacheKeyGenerator>()
-                //.TryAdd<IExecutionStrategyFactory, SqlServerExecutionStrategyFactory>()
-                //.TryAdd<IQueryCompilationContextFactory, SqlServerQueryCompilationContextFactory>()
+                //.TryAdd<IMigrationsSqlGenerator, AseMigrationsSqlGenerator>()
+                //.TryAdd<IRelationalDatabaseCreator, AseDatabaseCreator>()
+                //.TryAdd<IHistoryRepository, AseHistoryRepository>()
+                //.TryAdd<ICompiledQueryCacheKeyGenerator, AseCompiledQueryCacheKeyGenerator>()
+                //.TryAdd<IExecutionStrategyFactory, AseExecutionStrategyFactory>()
+                //.TryAdd<IQueryCompilationContextFactory, AseQueryCompilationContextFactory>()
                 .TryAdd<IMemberTranslator, AseCompositeMemberTranslator>()
                 .TryAdd<ICompositeMethodCallTranslator, AseCompositeMethodCallTranslator>()
                 .TryAdd<IQuerySqlGeneratorFactory, AseQuerySqlGeneratorFactory>()
-                //.TryAdd<ISqlTranslatingExpressionVisitorFactory, SqlServerSqlTranslatingExpressionVisitorFactory>()
-                //.TryAdd<ISingletonOptions, ISqlServerOptions>(p => p.GetService<ISqlServerOptions>())
+                //.TryAdd<ISqlTranslatingExpressionVisitorFactory, AseSqlTranslatingExpressionVisitorFactory>()
+                //.TryAdd<ISingletonOptions, IAseOptions>(p => p.GetService<IAseOptions>())
                 .TryAddProviderSpecificServices(
                     b => b
                         .TryAddSingleton<IAseValueGeneratorCache, AseValueGeneratorCache>()
-                        //        .TryAddSingleton<ISqlServerOptions, SqlServerOptions>()
+                        //        .TryAddSingleton<IAseOptions, AseOptions>()
                         .TryAddSingleton<IAseServerUpdateSqlGenerator, AseServerUpdateSqlGenerator>()
-                        //        .TryAddSingleton<ISqlServerSequenceValueGeneratorFactory, SqlServerSequenceValueGeneratorFactory>()
+                        //        .TryAddSingleton<IAseSequenceValueGeneratorFactory, AseSequenceValueGeneratorFactory>()
                         .TryAddScoped<IAseRelationalConnection, AseRelationalConnection>()
                         );
 

@@ -33,7 +33,7 @@ namespace EntityFrameworkCore.Ase.Internal
             IProperty property,
             IRelationalConnection connection)
         {
-            ISequence sequence = null; // property.Ase().FindHiLoSequence(); TODO https://github.com/aspnet/EntityFrameworkCore/blob/master/src/EFCore.SqlServer/Metadata/SqlServerPropertyAnnotations.cs
+            ISequence sequence = null; // property.Ase().FindHiLoSequence(); TODO https://github.com/aspnet/EntityFrameworkCore/blob/master/src/EFCore.Ase/Metadata/AsePropertyAnnotations.cs
 
             Debug.Assert(sequence != null);
 

@@ -84,5 +84,10 @@ namespace EntityFrameworkCore.Ase.Internal
         protected override void GenerateLimitOffset(SelectExpression selectExpression)
         {
         }
+
+        protected override void GeneratePredicate(Expression predicate)
+        {
+            base.GeneratePredicate(predicate);
+        }
     }
 }
