@@ -64,7 +64,6 @@ namespace EntityFrameworkCore.Ase.Internal
         {
             _levels = 0;
             var r = base.GenerateSql(parameterValues);
-            Debug.WriteLine(r.CommandText);
             return r;
         }
         
@@ -79,15 +78,6 @@ namespace EntityFrameworkCore.Ase.Internal
 
             _levels--;
             return v;
-        }
-    
-        protected override void GenerateLimitOffset(SelectExpression selectExpression)
-        {
-        }
-
-        protected override void GeneratePredicate(Expression predicate)
-        {
-            base.GeneratePredicate(predicate);
         }
     }
 }

@@ -4,13 +4,13 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <LangVersion>latest</LangVersion>
     <AssemblyName>EntityFrameworkCore.Ase</AssemblyName>
-    <Version>0.1.5</Version>
+    <Version>0.1.6-pr2</Version>
     <Description>A very barebones implementation of EntityFrameworkCore. Supports basic CRUD interactions. Lots of untested features.</Description>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageTags>EntityFrameworkCore ASE Sybase</PackageTags>
     <PackageLicenseUrl>https://opensource.org/licenses/MIT</PackageLicenseUrl>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
-    <PackageReleaseNotes>Bug fix with top/offset</PackageReleaseNotes>
+    <PackageReleaseNotes>Fixed a bug with the table alias generated was longer than the max supported alias</PackageReleaseNotes>
     <AssemblyVersion>0.1.5.0</AssemblyVersion>
     <FileVersion>0.1.5.0</FileVersion>
     <PackageProjectUrl>https://github.com/spasarto/EntityFrameworkCore.Ase</PackageProjectUrl>

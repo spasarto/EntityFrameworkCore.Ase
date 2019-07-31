@@ -1,6 +1,7 @@
 ﻿using EntityFrameworkCore.Ase.Internal;
 using EntityFrameworkCore.Ase.Internal.ExpressionTranslators;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Query;
 using Microsoft.EntityFrameworkCore.Query.ExpressionTranslators;
 using Microsoft.EntityFrameworkCore.Query.Sql;
 using Microsoft.EntityFrameworkCore.Storage;
@@ -33,7 +34,7 @@ namespace EntityFrameworkCore.Ase
                 //.TryAdd<IHistoryRepository, AseHistoryRepository>()
                 //.TryAdd<ICompiledQueryCacheKeyGenerator, AseCompiledQueryCacheKeyGenerator>()
                 //.TryAdd<IExecutionStrategyFactory, AseExecutionStrategyFactory>()
-                //.TryAdd<IQueryCompilationContextFactory, AseQueryCompilationContextFactory>()
+                .TryAdd<IQueryCompilationContextFactory, AseQueryCompilationContextFactory>()
                 .TryAdd<IMemberTranslator, AseCompositeMemberTranslator>()
                 .TryAdd<ICompositeMethodCallTranslator, AseCompositeMethodCallTranslator>()
                 .TryAdd<IQuerySqlGeneratorFactory, AseQuerySqlGeneratorFactory>()
