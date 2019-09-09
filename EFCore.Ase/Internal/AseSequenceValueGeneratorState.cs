@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.ValueGeneration;
 
 namespace EntityFrameworkCore.Ase.Internal
 {
-    internal class AseSequenceValueGeneratorState : HiLoValueGeneratorState
+    public class AseSequenceValueGeneratorState : HiLoValueGeneratorState
     {
         /// <summary>
         ///     This API supports the Entity Framework Core infrastructure and is not intended to be used

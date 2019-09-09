@@ -5,8 +5,6 @@ namespace EntityFrameworkCore.Ase.Internal
 {
     static class AseDbFunctionsExtensions
     {
-        public static Type UnwrapNullableType(this Type type) => Nullable.GetUnderlyingType(type) ?? type;
-
         /// <summary>
         ///     <para>
         ///         A DbFunction method stub that can be used in LINQ queries to target the SQL Server FREETEXT store function.
@@ -21,7 +19,7 @@ namespace EntityFrameworkCore.Ase.Internal
         /// <param name="freeText">The text that will be searched for in the property.</param>
         /// <param name="languageTerm">A Language ID from the sys.syslanguages table.</param>
         public static bool FreeText(
-             this DbFunctions _,
+            this DbFunctions _,
              string propertyReference,
              string freeText,
             int languageTerm)
@@ -40,7 +38,7 @@ namespace EntityFrameworkCore.Ase.Internal
         /// <param name="propertyReference">The property on which the search will be performed.</param>
         /// <param name="freeText">The text that will be searched for in the property.</param>
         public static bool FreeText(
-             this DbFunctions _,
+            this DbFunctions _,
              string propertyReference,
              string freeText)
             => FreeTextCore(propertyReference, freeText, null);
@@ -64,7 +62,7 @@ namespace EntityFrameworkCore.Ase.Internal
         /// <param name="searchCondition">The text that will be searched for in the property and the condition for a match.</param>
         /// <param name="languageTerm">A Language ID from the sys.syslanguages table.</param>
         public static bool Contains(
-             this DbFunctions _,
+            this DbFunctions _,
              string propertyReference,
              string searchCondition,
             int languageTerm)
@@ -83,14 +81,14 @@ namespace EntityFrameworkCore.Ase.Internal
         /// <param name="propertyReference">The property on which the search will be performed.</param>
         /// <param name="searchCondition">The text that will be searched for in the property and the condition for a match.</param>
         public static bool Contains(
-             this DbFunctions _,
+            this DbFunctions _,
              string propertyReference,
              string searchCondition)
             => ContainsCore(propertyReference, searchCondition, null);
 
         private static bool ContainsCore(string propertyName, string searchCondition, int? languageTerm)
         {
-            throw new InvalidOperationException("The 'Contains' method is not supported because the query has switched to client-evaluation. Inspect the log to determine which query expressions are triggering client-evaluation.");
+            throw new InvalidOperationException("The 'FreeText' method is not supported because the query has switched to client-evaluation. Inspect the log to determine which query expressions are triggering client-evaluation.");
         }
 
         /// <summary>
@@ -102,7 +100,7 @@ namespace EntityFrameworkCore.Ase.Internal
         /// <param name="endDate">Ending date for the calculation.</param>
         /// <returns>Number of year boundaries crossed between the dates.</returns>
         public static int DateDiffYear(
-             this DbFunctions _,
+            this DbFunctions _,
             DateTime startDate,
             DateTime endDate)
             => endDate.Year - startDate.Year;
@@ -116,7 +114,7 @@ namespace EntityFrameworkCore.Ase.Internal
         /// <param name="endDate">Ending date for the calculation.</param>
         /// <returns>Number of year boundaries crossed between the dates.</returns>
         public static int? DateDiffYear(
-             this DbFunctions _,
+            this DbFunctions _,
             DateTime? startDate,
             DateTime? endDate)
             => (startDate.HasValue && endDate.HasValue)
@@ -132,7 +130,7 @@ namespace EntityFrameworkCore.Ase.Internal
         /// <param name="endDate">Ending date for the calculation.</param>
         /// <returns>Number of year boundaries crossed between the dates.</returns>
         public static int DateDiffYear(
-             this DbFunctions _,
+            this DbFunctions _,
             DateTimeOffset startDate,
             DateTimeOffset endDate)
             => DateDiffYear(_, startDate.UtcDateTime, endDate.UtcDateTime);
@@ -146,7 +144,7 @@ namespace EntityFrameworkCore.Ase.Internal
         /// <param name="endDate">Ending date for the calculation.</param>
         /// <returns>Number of year boundaries crossed between the dates.</returns>
         public static int? DateDiffYear(
-             this DbFunctions _,
+            this DbFunctions _,
             DateTimeOffset? startDate,
             DateTimeOffset? endDate)
             => (startDate.HasValue && endDate.HasValue)
@@ -162,7 +160,7 @@ namespace EntityFrameworkCore.Ase.Internal
         /// <param name="endDate">Ending date for the calculation.</param>
         /// <returns>Number of month boundaries crossed between the dates.</returns>
         public static int DateDiffMonth(
-             this DbFunctions _,
+            this DbFunctions _,
             DateTime startDate,
             DateTime endDate)
             => 12 * (endDate.Year - startDate.Year) + endDate.Month - startDate.Month;
@@ -176,7 +174,7 @@ namespace EntityFrameworkCore.Ase.Internal
         /// <param name="endDate">Ending date for the calculation.</param>
         /// <returns>Number of month boundaries crossed between the dates.</returns>
         public static int? DateDiffMonth(
-             this DbFunctions _,
+            this DbFunctions _,
             DateTime? startDate,
             DateTime? endDate)
             => (startDate.HasValue && endDate.HasValue)
@@ -192,7 +190,7 @@ namespace EntityFrameworkCore.Ase.Internal
         /// <param name="endDate">Ending date for the calculation.</param>
         /// <returns>Number of month boundaries crossed between the dates.</returns>
         public static int DateDiffMonth(
-             this DbFunctions _,
+            this DbFunctions _,
             DateTimeOffset startDate,
             DateTimeOffset endDate)
             => DateDiffMonth(_, startDate.UtcDateTime, endDate.UtcDateTime);
@@ -206,7 +204,7 @@ namespace EntityFrameworkCore.Ase.Internal
         /// <param name="endDate">Ending date for the calculation.</param>
         /// <returns>Number of month boundaries crossed between the dates.</returns>
         public static int? DateDiffMonth(
-             this DbFunctions _,
+            this DbFunctions _,
             DateTimeOffset? startDate,
             DateTimeOffset? endDate)
             => (startDate.HasValue && endDate.HasValue)
@@ -222,7 +220,7 @@ namespace EntityFrameworkCore.Ase.Internal
         /// <param name="endDate">Ending date for the calculation.</param>
         /// <returns>Number of day boundaries crossed between the dates.</returns>
         public static int DateDiffDay(
-             this DbFunctions _,
+            this DbFunctions _,
             DateTime startDate,
             DateTime endDate)
             => (endDate.Date - startDate.Date).Days;
@@ -236,7 +234,7 @@ namespace EntityFrameworkCore.Ase.Internal
         /// <param name="endDate">Ending date for the calculation.</param>
         /// <returns>Number of day boundaries crossed between the dates.</returns>
         public static int? DateDiffDay(
-             this DbFunctions _,
+            this DbFunctions _,
             DateTime? startDate,
             DateTime? endDate)
             => (startDate.HasValue && endDate.HasValue)
@@ -252,7 +250,7 @@ namespace EntityFrameworkCore.Ase.Internal
         /// <param name="endDate">Ending date for the calculation.</param>
         /// <returns>Number of day boundaries crossed between the dates.</returns>
         public static int DateDiffDay(
-             this DbFunctions _,
+            this DbFunctions _,
             DateTimeOffset startDate,
             DateTimeOffset endDate)
             => DateDiffDay(_, startDate.UtcDateTime, endDate.UtcDateTime);
@@ -266,7 +264,7 @@ namespace EntityFrameworkCore.Ase.Internal
         /// <param name="endDate">Ending date for the calculation.</param>
         /// <returns>Number of day boundaries crossed between the dates.</returns>
         public static int? DateDiffDay(
-             this DbFunctions _,
+            this DbFunctions _,
             DateTimeOffset? startDate,
             DateTimeOffset? endDate)
             => (startDate.HasValue && endDate.HasValue)
@@ -282,7 +280,7 @@ namespace EntityFrameworkCore.Ase.Internal
         /// <param name="endDate">Ending date for the calculation.</param>
         /// <returns>Number of hour boundaries crossed between the dates.</returns>
         public static int DateDiffHour(
-             this DbFunctions _,
+            this DbFunctions _,
             DateTime startDate,
             DateTime endDate)
         {
@@ -301,7 +299,7 @@ namespace EntityFrameworkCore.Ase.Internal
         /// <param name="endDate">Ending date for the calculation.</param>
         /// <returns>Number of hour boundaries crossed between the dates.</returns>
         public static int? DateDiffHour(
-             this DbFunctions _,
+            this DbFunctions _,
             DateTime? startDate,
             DateTime? endDate)
             => (startDate.HasValue && endDate.HasValue)
@@ -317,7 +315,7 @@ namespace EntityFrameworkCore.Ase.Internal
         /// <param name="endDate">Ending date for the calculation.</param>
         /// <returns>Number of hour boundaries crossed between the dates.</returns>
         public static int DateDiffHour(
-             this DbFunctions _,
+            this DbFunctions _,
             DateTimeOffset startDate,
             DateTimeOffset endDate)
             => DateDiffHour(_, startDate.UtcDateTime, endDate.UtcDateTime);
@@ -331,11 +329,46 @@ namespace EntityFrameworkCore.Ase.Internal
         /// <param name="endDate">Ending date for the calculation.</param>
         /// <returns>Number of hour boundaries crossed between the dates.</returns>
         public static int? DateDiffHour(
-             this DbFunctions _,
+            this DbFunctions _,
             DateTimeOffset? startDate,
             DateTimeOffset? endDate)
             => (startDate.HasValue && endDate.HasValue)
                 ? (int?)DateDiffHour(_, startDate.Value, endDate.Value)
+                : null;
+
+        /// <summary>
+        ///     Counts the number of hour boundaries crossed between the startTimeSpan and endTimeSpan.
+        ///     Corresponds to SQL Server's DATEDIFF(HOUR,startDate,endDate).
+        /// </summary>
+        /// <param name="_">The DbFunctions instance.</param>
+        /// <param name="startTimeSpan">Starting timespan for the calculation.</param>
+        /// <param name="endTimeSpan">Ending timespan for the calculation.</param>
+        /// <returns>Number of hour boundaries crossed between the timespans.</returns>
+        public static int DateDiffHour(
+            this DbFunctions _,
+            TimeSpan startTimeSpan,
+            TimeSpan endTimeSpan)
+        {
+            checked
+            {
+                return endTimeSpan.Hours - startTimeSpan.Hours;
+            }
+        }
+
+        /// <summary>
+        ///     Counts the number of hour boundaries crossed between the startTimeSpan and endTimeSpan.
+        ///     Corresponds to SQL Server's DATEDIFF(HOUR,startDate,endDate).
+        /// </summary>
+        /// <param name="_">The DbFunctions instance.</param>
+        /// <param name="startTimeSpan">Starting timespan for the calculation.</param>
+        /// <param name="endTimeSpan">Ending timespan for the calculation.</param>
+        /// <returns>Number of hour boundaries crossed between the timespans.</returns>
+        public static int? DateDiffHour(
+            this DbFunctions _,
+            TimeSpan? startTimeSpan,
+            TimeSpan? endTimeSpan)
+            => (startTimeSpan.HasValue && endTimeSpan.HasValue)
+                ? (int?)DateDiffHour(_, startTimeSpan.Value, endTimeSpan.Value)
                 : null;
 
         /// <summary>
@@ -347,7 +380,7 @@ namespace EntityFrameworkCore.Ase.Internal
         /// <param name="endDate">Ending date for the calculation.</param>
         /// <returns>Number of minute boundaries crossed between the dates.</returns>
         public static int DateDiffMinute(
-             this DbFunctions _,
+            this DbFunctions _,
             DateTime startDate,
             DateTime endDate)
         {
@@ -366,7 +399,7 @@ namespace EntityFrameworkCore.Ase.Internal
         /// <param name="endDate">Ending date for the calculation.</param>
         /// <returns>Number of minute boundaries crossed between the dates.</returns>
         public static int? DateDiffMinute(
-             this DbFunctions _,
+            this DbFunctions _,
             DateTime? startDate,
             DateTime? endDate)
             => (startDate.HasValue && endDate.HasValue)
@@ -382,7 +415,7 @@ namespace EntityFrameworkCore.Ase.Internal
         /// <param name="endDate">Ending date for the calculation.</param>
         /// <returns>Number of minute boundaries crossed between the dates.</returns>
         public static int DateDiffMinute(
-             this DbFunctions _,
+            this DbFunctions _,
             DateTimeOffset startDate,
             DateTimeOffset endDate)
             => DateDiffMinute(_, startDate.UtcDateTime, endDate.UtcDateTime);
@@ -396,11 +429,46 @@ namespace EntityFrameworkCore.Ase.Internal
         /// <param name="endDate">Ending date for the calculation.</param>
         /// <returns>Number of minute boundaries crossed between the dates.</returns>
         public static int? DateDiffMinute(
-             this DbFunctions _,
+            this DbFunctions _,
             DateTimeOffset? startDate,
             DateTimeOffset? endDate)
             => (startDate.HasValue && endDate.HasValue)
                 ? (int?)DateDiffMinute(_, startDate.Value, endDate.Value)
+                : null;
+
+        /// <summary>
+        ///     Counts the number of minute boundaries crossed between the startTimeSpan and endTimeSpan.
+        ///     Corresponds to SQL Server's DATEDIFF(MINUTE,startDate,endDate).
+        /// </summary>
+        /// <param name="_">The DbFunctions instance.</param>
+        /// <param name="startTimeSpan">Starting timespan for the calculation.</param>
+        /// <param name="endTimeSpan">Ending timespan for the calculation.</param>
+        /// <returns>Number of minute boundaries crossed between the timespans.</returns>
+        public static int DateDiffMinute(
+            this DbFunctions _,
+            TimeSpan startTimeSpan,
+            TimeSpan endTimeSpan)
+        {
+            checked
+            {
+                return DateDiffHour(_, startTimeSpan, endTimeSpan) * 60 + endTimeSpan.Minutes - startTimeSpan.Minutes;
+            }
+        }
+
+        /// <summary>
+        ///     Counts the number of minute boundaries crossed between the startTimeSpan and endTimeSpan.
+        ///     Corresponds to SQL Server's DATEDIFF(MINUTE,startDate,endDate).
+        /// </summary>
+        /// <param name="_">The DbFunctions instance.</param>
+        /// <param name="startTimeSpan">Starting timespan for the calculation.</param>
+        /// <param name="endTimeSpan">Ending timespan for the calculation.</param>
+        /// <returns>Number of minute boundaries crossed between the timespans.</returns>
+        public static int? DateDiffMinute(
+            this DbFunctions _,
+            TimeSpan? startTimeSpan,
+            TimeSpan? endTimeSpan)
+            => (startTimeSpan.HasValue && endTimeSpan.HasValue)
+                ? (int?)DateDiffMinute(_, startTimeSpan.Value, endTimeSpan.Value)
                 : null;
 
         /// <summary>
@@ -412,7 +480,7 @@ namespace EntityFrameworkCore.Ase.Internal
         /// <param name="endDate">Ending date for the calculation.</param>
         /// <returns>Number of second boundaries crossed between the dates.</returns>
         public static int DateDiffSecond(
-             this DbFunctions _,
+            this DbFunctions _,
             DateTime startDate,
             DateTime endDate)
         {
@@ -431,7 +499,7 @@ namespace EntityFrameworkCore.Ase.Internal
         /// <param name="endDate">Ending date for the calculation.</param>
         /// <returns>Number of second boundaries crossed between the dates.</returns>
         public static int? DateDiffSecond(
-             this DbFunctions _,
+            this DbFunctions _,
             DateTime? startDate,
             DateTime? endDate)
             => (startDate.HasValue && endDate.HasValue)
@@ -447,7 +515,7 @@ namespace EntityFrameworkCore.Ase.Internal
         /// <param name="endDate">Ending date for the calculation.</param>
         /// <returns>Number of second boundaries crossed between the dates.</returns>
         public static int DateDiffSecond(
-             this DbFunctions _,
+            this DbFunctions _,
             DateTimeOffset startDate,
             DateTimeOffset endDate)
             => DateDiffSecond(_, startDate.UtcDateTime, endDate.UtcDateTime);
@@ -461,11 +529,46 @@ namespace EntityFrameworkCore.Ase.Internal
         /// <param name="endDate">Ending date for the calculation.</param>
         /// <returns>Number of second boundaries crossed between the dates.</returns>
         public static int? DateDiffSecond(
-             this DbFunctions _,
+            this DbFunctions _,
             DateTimeOffset? startDate,
             DateTimeOffset? endDate)
             => (startDate.HasValue && endDate.HasValue)
                 ? (int?)DateDiffSecond(_, startDate.Value, endDate.Value)
+                : null;
+
+        /// <summary>
+        ///     Counts the number of second boundaries crossed between the startTimeSpan and endTimeSpan.
+        ///     Corresponds to SQL Server's DATEDIFF(SECOND,startDate,endDate).
+        /// </summary>
+        /// <param name="_">The DbFunctions instance.</param>
+        /// <param name="startTimeSpan">Starting timespan for the calculation.</param>
+        /// <param name="endTimeSpan">Ending timespan for the calculation.</param>
+        /// <returns>Number of second boundaries crossed between the timespans.</returns>
+        public static int DateDiffSecond(
+            this DbFunctions _,
+            TimeSpan startTimeSpan,
+            TimeSpan endTimeSpan)
+        {
+            checked
+            {
+                return DateDiffMinute(_, startTimeSpan, endTimeSpan) * 60 + endTimeSpan.Seconds - startTimeSpan.Seconds;
+            }
+        }
+
+        /// <summary>
+        ///     Counts the number of second boundaries crossed between the startTimeSpan and endTimeSpan.
+        ///     Corresponds to SQL Server's DATEDIFF(SECOND,startDate,endDate).
+        /// </summary>
+        /// <param name="_">The DbFunctions instance.</param>
+        /// <param name="startTimeSpan">Starting timespan for the calculation.</param>
+        /// <param name="endTimeSpan">Ending timespan for the calculation.</param>
+        /// <returns>Number of second boundaries crossed between the timespans.</returns>
+        public static int? DateDiffSecond(
+            this DbFunctions _,
+            TimeSpan? startTimeSpan,
+            TimeSpan? endTimeSpan)
+            => (startTimeSpan.HasValue && endTimeSpan.HasValue)
+                ? (int?)DateDiffSecond(_, startTimeSpan.Value, endTimeSpan.Value)
                 : null;
 
         /// <summary>
@@ -477,7 +580,7 @@ namespace EntityFrameworkCore.Ase.Internal
         /// <param name="endDate">Ending date for the calculation.</param>
         /// <returns>Number of millisecond boundaries crossed between the dates.</returns>
         public static int DateDiffMillisecond(
-             this DbFunctions _,
+            this DbFunctions _,
             DateTime startDate,
             DateTime endDate)
         {
@@ -496,7 +599,7 @@ namespace EntityFrameworkCore.Ase.Internal
         /// <param name="endDate">Ending date for the calculation.</param>
         /// <returns>Number of millisecond boundaries crossed between the dates.</returns>
         public static int? DateDiffMillisecond(
-             this DbFunctions _,
+            this DbFunctions _,
             DateTime? startDate,
             DateTime? endDate)
             => (startDate.HasValue && endDate.HasValue)
@@ -512,7 +615,7 @@ namespace EntityFrameworkCore.Ase.Internal
         /// <param name="endDate">Ending date for the calculation.</param>
         /// <returns>Number of millisecond boundaries crossed between the dates.</returns>
         public static int DateDiffMillisecond(
-             this DbFunctions _,
+            this DbFunctions _,
             DateTimeOffset startDate,
             DateTimeOffset endDate)
             => DateDiffMillisecond(_, startDate.UtcDateTime, endDate.UtcDateTime);
@@ -526,11 +629,46 @@ namespace EntityFrameworkCore.Ase.Internal
         /// <param name="endDate">Ending date for the calculation.</param>
         /// <returns>Number of millisecond boundaries crossed between the dates.</returns>
         public static int? DateDiffMillisecond(
-             this DbFunctions _,
+            this DbFunctions _,
             DateTimeOffset? startDate,
             DateTimeOffset? endDate)
             => (startDate.HasValue && endDate.HasValue)
                 ? (int?)DateDiffMillisecond(_, startDate.Value, endDate.Value)
+                : null;
+
+        /// <summary>
+        ///     Counts the number of millisecond boundaries crossed between the startTimeSpan and endTimeSpan.
+        ///     Corresponds to SQL Server's DATEDIFF(MILLISECOND,startDate,endDate).
+        /// </summary>
+        /// <param name="_">The DbFunctions instance.</param>
+        /// <param name="startTimeSpan">Starting timespan for the calculation.</param>
+        /// <param name="endTimeSpan">Ending timespan for the calculation.</param>
+        /// <returns>Number of millisecond boundaries crossed between the timespans.</returns>
+        public static int DateDiffMillisecond(
+            this DbFunctions _,
+            TimeSpan startTimeSpan,
+            TimeSpan endTimeSpan)
+        {
+            checked
+            {
+                return DateDiffSecond(_, startTimeSpan, endTimeSpan) * 1000 + endTimeSpan.Milliseconds - startTimeSpan.Milliseconds;
+            }
+        }
+
+        /// <summary>
+        ///     Counts the number of millisecond boundaries crossed between the startTimeSpan and endTimeSpan.
+        ///     Corresponds to SQL Server's DATEDIFF(MILLISECOND,startDate,endDate).
+        /// </summary>
+        /// <param name="_">The DbFunctions instance.</param>
+        /// <param name="startTimeSpan">Starting timespan for the calculation.</param>
+        /// <param name="endTimeSpan">Ending timespan for the calculation.</param>
+        /// <returns>Number of millisecond boundaries crossed between the timespans.</returns>
+        public static int? DateDiffMillisecond(
+            this DbFunctions _,
+            TimeSpan? startTimeSpan,
+            TimeSpan? endTimeSpan)
+            => (startTimeSpan.HasValue && endTimeSpan.HasValue)
+                ? (int?)DateDiffMillisecond(_, startTimeSpan.Value, endTimeSpan.Value)
                 : null;
 
         /// <summary>
@@ -542,7 +680,7 @@ namespace EntityFrameworkCore.Ase.Internal
         /// <param name="endDate">Ending date for the calculation.</param>
         /// <returns>Number of microsecond boundaries crossed between the dates.</returns>
         public static int DateDiffMicrosecond(
-             this DbFunctions _,
+            this DbFunctions _,
             DateTime startDate,
             DateTime endDate)
         {
@@ -561,7 +699,7 @@ namespace EntityFrameworkCore.Ase.Internal
         /// <param name="endDate">Ending date for the calculation.</param>
         /// <returns>Number of microsecond boundaries crossed between the dates.</returns>
         public static int? DateDiffMicrosecond(
-             this DbFunctions _,
+            this DbFunctions _,
             DateTime? startDate,
             DateTime? endDate)
             => (startDate.HasValue && endDate.HasValue)
@@ -577,7 +715,7 @@ namespace EntityFrameworkCore.Ase.Internal
         /// <param name="endDate">Ending date for the calculation.</param>
         /// <returns>Number of microsecond boundaries crossed between the dates.</returns>
         public static int DateDiffMicrosecond(
-             this DbFunctions _,
+            this DbFunctions _,
             DateTimeOffset startDate,
             DateTimeOffset endDate)
             => DateDiffMicrosecond(_, startDate.UtcDateTime, endDate.UtcDateTime);
@@ -591,11 +729,46 @@ namespace EntityFrameworkCore.Ase.Internal
         /// <param name="endDate">Ending date for the calculation.</param>
         /// <returns>Number of microsecond boundaries crossed between the dates.</returns>
         public static int? DateDiffMicrosecond(
-             this DbFunctions _,
+            this DbFunctions _,
             DateTimeOffset? startDate,
             DateTimeOffset? endDate)
             => (startDate.HasValue && endDate.HasValue)
                 ? (int?)DateDiffMicrosecond(_, startDate.Value, endDate.Value)
+                : null;
+
+        /// <summary>
+        ///     Counts the number of microsecond boundaries crossed between the startTimeSpan and endTimeSpan.
+        ///     Corresponds to SQL Server's DATEDIFF(MICROSECOND,startDate,endDate).
+        /// </summary>
+        /// <param name="_">The DbFunctions instance.</param>
+        /// <param name="startTimeSpan">Starting timespan for the calculation.</param>
+        /// <param name="endTimeSpan">Ending timespan for the calculation.</param>
+        /// <returns>Number of microsecond boundaries crossed between the timespans.</returns>
+        public static int DateDiffMicrosecond(
+            this DbFunctions _,
+            TimeSpan startTimeSpan,
+            TimeSpan endTimeSpan)
+        {
+            checked
+            {
+                return (int)((endTimeSpan.Ticks - startTimeSpan.Ticks) / 10);
+            }
+        }
+
+        /// <summary>
+        ///     Counts the number of microsecond boundaries crossed between the startTimeSpan and endTimeSpan.
+        ///     Corresponds to SQL Server's DATEDIFF(MICROSECOND,startDate,endDate).
+        /// </summary>
+        /// <param name="_">The DbFunctions instance.</param>
+        /// <param name="startTimeSpan">Starting timespan for the calculation.</param>
+        /// <param name="endTimeSpan">Ending timespan for the calculation.</param>
+        /// <returns>Number of microsecond boundaries crossed between the timespans.</returns>
+        public static int? DateDiffMicrosecond(
+            this DbFunctions _,
+            TimeSpan? startTimeSpan,
+            TimeSpan? endTimeSpan)
+            => (startTimeSpan.HasValue && endTimeSpan.HasValue)
+                ? (int?)DateDiffMicrosecond(_, startTimeSpan.Value, endTimeSpan.Value)
                 : null;
 
         /// <summary>
@@ -607,7 +780,7 @@ namespace EntityFrameworkCore.Ase.Internal
         /// <param name="endDate">Ending date for the calculation.</param>
         /// <returns>Number of nanosecond boundaries crossed between the dates.</returns>
         public static int DateDiffNanosecond(
-             this DbFunctions _,
+            this DbFunctions _,
             DateTime startDate,
             DateTime endDate)
         {
@@ -626,7 +799,7 @@ namespace EntityFrameworkCore.Ase.Internal
         /// <param name="endDate">Ending date for the calculation.</param>
         /// <returns>Number of nanosecond boundaries crossed between the dates.</returns>
         public static int? DateDiffNanosecond(
-             this DbFunctions _,
+            this DbFunctions _,
             DateTime? startDate,
             DateTime? endDate)
             => (startDate.HasValue && endDate.HasValue)
@@ -642,7 +815,7 @@ namespace EntityFrameworkCore.Ase.Internal
         /// <param name="endDate">Ending date for the calculation.</param>
         /// <returns>Number of nanosecond boundaries crossed between the dates.</returns>
         public static int DateDiffNanosecond(
-             this DbFunctions _,
+            this DbFunctions _,
             DateTimeOffset startDate,
             DateTimeOffset endDate)
             => DateDiffNanosecond(_, startDate.UtcDateTime, endDate.UtcDateTime);
@@ -656,11 +829,58 @@ namespace EntityFrameworkCore.Ase.Internal
         /// <param name="endDate">Ending date for the calculation.</param>
         /// <returns>Number of nanosecond boundaries crossed between the dates.</returns>
         public static int? DateDiffNanosecond(
-             this DbFunctions _,
+            this DbFunctions _,
             DateTimeOffset? startDate,
             DateTimeOffset? endDate)
             => (startDate.HasValue && endDate.HasValue)
                 ? (int?)DateDiffNanosecond(_, startDate.Value, endDate.Value)
                 : null;
+
+        /// <summary>
+        ///     Counts the number of nanosecond boundaries crossed between the startTimeSpan and endTimeSpan.
+        ///     Corresponds to SQL Server's DATEDIFF(NANOSECOND,startDate,endDate).
+        /// </summary>
+        /// <param name="_">The DbFunctions instance.</param>
+        /// <param name="startTimeSpan">Starting timespan for the calculation.</param>
+        /// <param name="endTimeSpan">Ending timespan for the calculation.</param>
+        /// <returns>Number of nanosecond boundaries crossed between the dates.</returns>
+        public static int DateDiffNanosecond(
+            this DbFunctions _,
+            TimeSpan startTimeSpan,
+            TimeSpan endTimeSpan)
+        {
+            checked
+            {
+                return (int)((endTimeSpan.Ticks - startTimeSpan.Ticks) * 100);
+            }
+        }
+
+        /// <summary>
+        ///     Counts the number of nanosecond boundaries crossed between the startTimeSpan and endTimeSpan.
+        ///     Corresponds to SQL Server's DATEDIFF(NANOSECOND,startDate,endDate).
+        /// </summary>
+        /// <param name="_">The DbFunctions instance.</param>
+        /// <param name="startTimeSpan">Starting timespan for the calculation.</param>
+        /// <param name="endTimeSpan">Ending timespan for the calculation.</param>
+        /// <returns>Number of nanosecond boundaries crossed between the dates.</returns>
+        public static int? DateDiffNanosecond(
+            this DbFunctions _,
+            TimeSpan? startTimeSpan,
+            TimeSpan? endTimeSpan)
+            => (startTimeSpan.HasValue && endTimeSpan.HasValue)
+                ? (int?)DateDiffNanosecond(_, startTimeSpan.Value, endTimeSpan.Value)
+                : null;
+
+        /// <summary>
+        ///     Validate if the given string is a valid date.
+        ///     Corresponds to the SQL Server's ISDATE('date').
+        /// </summary>
+        /// <param name="_">The DbFunctions instance.</param>
+        /// <param name="expression">Expression to validate</param>
+        /// <returns>true for valid date and false otherwise.</returns>
+        public static bool IsDate(
+            this DbFunctions _,
+             string expression)
+            => throw new InvalidOperationException("The 'FreeText' method is not supported because the query has switched to client-evaluation. Inspect the log to determine which query expressions are triggering client-evaluation.");
     }
 }

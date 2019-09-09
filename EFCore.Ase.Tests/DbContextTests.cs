@@ -1,15 +1,8 @@
 ﻿using EntityFrameworkCore.Ase.Tests.Infastructure;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
-using System.Collections.Generic;
-using System.Text;
-using EntityFrameworkCore.Ase;
-using Microsoft.EntityFrameworkCore;
 using System.Linq;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Logging.Console;
-using System.Diagnostics;
-using System.IO;
 
 namespace EntityFrameworkCore.Ase.Tests
 {
@@ -24,6 +17,10 @@ namespace EntityFrameworkCore.Ase.Tests
         {
             TestConfiguration.Initialize();
             _options = TestConfiguration.GetOptions<AseOptions>().Value;
+
+            if (_options.ConnectionString == null)
+                throw new Exception("Connection string not provided in the application configuration. Update app secret 'ConnectionString' with your connection string.");
+
             _migrations = new PoorMansMigration(_options);
 
             _migrations.Up();
@@ -75,7 +72,7 @@ namespace EntityFrameworkCore.Ase.Tests
             {
                 _connString = connString;
             }
-            
+
             protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
             {
                 base.OnConfiguring(optionsBuilder);

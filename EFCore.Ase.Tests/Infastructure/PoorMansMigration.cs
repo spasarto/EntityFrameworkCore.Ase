@@ -1,8 +1,4 @@
 ﻿using AdoNetCore.AseClient;
-using Microsoft.Extensions.Options;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace EntityFrameworkCore.Ase.Tests.Infastructure
 {
@@ -27,7 +23,7 @@ namespace EntityFrameworkCore.Ase.Tests.Infastructure
                     var cmd = conn.CreateCommand();
                     cmd.CommandText = "create table test_order (id int, name varchar(50), guid_id varchar(36))";
                     cmd.ExecuteNonQuery();
-                    
+
                     cmd.CommandText = "insert into test_order (id, name, guid_id) values (1, 'asdf', 'FA7D2349-87D6-4178-A6B5-F07D8293589A')";
                     cmd.ExecuteNonQuery();
                 }

@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq.Expressions;
-using Microsoft.EntityFrameworkCore.Query.Expressions;
-using Microsoft.EntityFrameworkCore.Query.ExpressionTranslators;
+using System.Reflection;
+using Microsoft.EntityFrameworkCore.Query;
+using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
 
 namespace EntityFrameworkCore.Ase.Internal.ExpressionTranslators
 {
@@ -21,7 +21,6 @@ namespace EntityFrameworkCore.Ase.Internal.ExpressionTranslators
                 { typeof(long), "VARCHAR(20)" },
                 { typeof(DateTime), $"VARCHAR({DefaultLength})" },
                 { typeof(Guid), "VARCHAR(36)" },
-                { typeof(bool), "VARCHAR(5)" },
                 { typeof(byte), "VARCHAR(3)" },
                 { typeof(byte[]), $"VARCHAR({DefaultLength})" },
                 { typeof(double), $"VARCHAR({DefaultLength})" },
@@ -37,27 +36,25 @@ namespace EntityFrameworkCore.Ase.Internal.ExpressionTranslators
                 { typeof(sbyte), "VARCHAR(4)" }
             };
 
-        /// <summary>
-        ///     This API supports the Entity Framework Core infrastructure and is not intended to be used
-        ///     directly from your code. This API may change or be removed in future releases.
-        /// </summary>
-        public virtual Expression Translate(MethodCallExpression methodCallExpression)
+        private readonly ISqlExpressionFactory _sqlExpressionFactory;
+
+        public AseObjectToStringTranslator(ISqlExpressionFactory sqlExpressionFactory)
         {
-            return methodCallExpression.Method.Name == nameof(ToString)
-                && methodCallExpression.Arguments.Count == 0
-                && methodCallExpression.Object != null
-                && _typeMapping.TryGetValue(
-                    methodCallExpression.Object.Type
-                        .UnwrapNullableType(),
-                    out var storeType)
-                ? new SqlFunctionExpression(
-                    functionName: "CONVERT",
-                    returnType: methodCallExpression.Type,
-                    arguments: new[]
-                    {
-                        new SqlFragmentExpression(storeType),
-                        methodCallExpression.Object
-                    })
+            _sqlExpressionFactory = sqlExpressionFactory;
+        }
+
+        public virtual SqlExpression Translate(SqlExpression instance, MethodInfo method, IReadOnlyList<SqlExpression> arguments)
+        {
+            return method.Name == nameof(ToString)
+                   && arguments.Count == 0
+                   && instance != null
+                   && _typeMapping.TryGetValue(
+                       instance.Type.UnwrapNullableType(),
+                       out var storeType)
+                ? _sqlExpressionFactory.Function(
+                    "CONVERT",
+                    new[] { _sqlExpressionFactory.Fragment(storeType), instance },
+                    typeof(string))
                 : null;
         }
     }

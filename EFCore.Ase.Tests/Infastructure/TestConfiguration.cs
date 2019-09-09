@@ -20,7 +20,7 @@ namespace EntityFrameworkCore.Ase.Tests.Infastructure
         {
             TOptions options = new TOptions();
 
-            (config ?? Configuration).Bind(typeof(TOptions).Name, options);
+            (config ?? Configuration).Bind(options);
             
             return Options.Create(options);
         }

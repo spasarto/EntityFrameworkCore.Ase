@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Reflection;
-using Microsoft.EntityFrameworkCore.Query.Expressions;
-using Microsoft.EntityFrameworkCore.Query.ExpressionTranslators;
-using Microsoft.EntityFrameworkCore.Utilities;
+using Microsoft.EntityFrameworkCore.Query;
+using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
 
 namespace EntityFrameworkCore.Ase.Internal.ExpressionTranslators
 {
@@ -64,51 +62,57 @@ namespace EntityFrameworkCore.Ase.Internal.ExpressionTranslators
             typeof(Math).GetRuntimeMethod(nameof(Math.Round), new[] { typeof(double), typeof(int) })
         };
 
-        /// <summary>
-        ///     This API supports the Entity Framework Core infrastructure and is not intended to be used
-        ///     directly from your code. This API may change or be removed in future releases.
-        /// </summary>
-        public virtual Expression Translate(MethodCallExpression methodCallExpression)
+        private readonly ISqlExpressionFactory _sqlExpressionFactory;
+
+        public AseMathTranslator(ISqlExpressionFactory sqlExpressionFactory)
         {
-            var method = methodCallExpression.Method;
+            _sqlExpressionFactory = sqlExpressionFactory;
+        }
+
+        public virtual SqlExpression Translate(SqlExpression instance, MethodInfo method, IReadOnlyList<SqlExpression> arguments)
+        {
             if (_supportedMethodTranslations.TryGetValue(method, out var sqlFunctionName))
             {
-                return new SqlFunctionExpression(
+                var typeMapping = arguments.Count == 1
+                    ? ExpressionExtensions.InferTypeMapping(arguments[0])
+                    : ExpressionExtensions.InferTypeMapping(arguments[0], arguments[1]);
+
+                var newArguments = new SqlExpression[arguments.Count];
+                newArguments[0] = _sqlExpressionFactory.ApplyTypeMapping(arguments[0], typeMapping);
+
+                if (arguments.Count == 2)
+                {
+                    newArguments[1] = _sqlExpressionFactory.ApplyTypeMapping(arguments[1], typeMapping);
+                }
+
+                return _sqlExpressionFactory.Function(
                     sqlFunctionName,
-                    methodCallExpression.Type,
-                    methodCallExpression.Arguments);
+                    newArguments,
+                    method.ReturnType,
+                    sqlFunctionName == "SIGN" ? null : typeMapping);
             }
 
             if (_truncateMethodInfos.Contains(method))
             {
-                var firstArgument = methodCallExpression.Arguments[0];
+                var argument = arguments[0];
 
-                if (firstArgument.NodeType == ExpressionType.Convert)
-                {
-                    firstArgument = new ExplicitCastExpression(firstArgument, firstArgument.Type);
-                }
-
-                return new SqlFunctionExpression(
+                return _sqlExpressionFactory.Function(
                     "ROUND",
-                    methodCallExpression.Type,
-                    new[] { firstArgument, Expression.Constant(0), Expression.Constant(1) });
+                    new[] { argument, _sqlExpressionFactory.Constant(0), _sqlExpressionFactory.Constant(1) },
+                    method.ReturnType,
+                    argument.TypeMapping);
             }
 
             if (_roundMethodInfos.Contains(method))
             {
-                var firstArgument = methodCallExpression.Arguments[0];
+                var argument = arguments[0];
+                var digits = arguments.Count == 2 ? arguments[1] : _sqlExpressionFactory.Constant(0);
 
-                if (firstArgument.NodeType == ExpressionType.Convert)
-                {
-                    firstArgument = new ExplicitCastExpression(firstArgument, firstArgument.Type);
-                }
-
-                return new SqlFunctionExpression(
+                return _sqlExpressionFactory.Function(
                     "ROUND",
-                    methodCallExpression.Type,
-                    methodCallExpression.Arguments.Count == 1
-                        ? new[] { firstArgument, Expression.Constant(0) }
-                        : new[] { firstArgument, methodCallExpression.Arguments[1] });
+                    new[] { argument, digits },
+                    method.ReturnType,
+                    argument.TypeMapping);
             }
 
             return null;

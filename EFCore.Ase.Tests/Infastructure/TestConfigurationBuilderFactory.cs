@@ -8,7 +8,7 @@ namespace EntityFrameworkCore.Ase.Tests
         {
             var configurationBuilder = new ConfigurationBuilder();
             configurationBuilder.AddJsonFile("appsettings.json");
-            configurationBuilder.AddUserSecrets("aseSecrets");
+            configurationBuilder.AddUserSecrets("79a3edd0-2092-40ff-a04d-dcb46d5cafff");
 
             return configurationBuilder;
         }

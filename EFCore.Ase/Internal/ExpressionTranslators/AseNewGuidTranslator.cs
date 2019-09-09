@@ -1,21 +1,30 @@
-﻿using System;
-using Microsoft.EntityFrameworkCore.Query.ExpressionTranslators;
+﻿using Microsoft.EntityFrameworkCore.Query;
+using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
+using System;
+using System.Collections.Generic;
+using System.Reflection;
+
 
 namespace EntityFrameworkCore.Ase.Internal.ExpressionTranslators
 {
-    /// <summary>
-    ///     This API supports the Entity Framework Core infrastructure and is not intended to be used
-    ///     directly from your code. This API may change or be removed in future releases.
-    /// </summary>
-    public class AseNewGuidTranslator : SingleOverloadStaticMethodCallTranslator
+    public class AseNewGuidTranslator : IMethodCallTranslator
     {
-        /// <summary>
-        ///     This API supports the Entity Framework Core infrastructure and is not intended to be used
-        ///     directly from your code. This API may change or be removed in future releases.
-        /// </summary>
-        public AseNewGuidTranslator()
-            : base(typeof(Guid), nameof(Guid.NewGuid), "NEWID")
+        private static readonly MethodInfo _methodInfo = typeof(Guid).GetRuntimeMethod(nameof(Guid.NewGuid), Array.Empty<Type>());
+        private readonly ISqlExpressionFactory _sqlExpressionFactory;
+
+        public AseNewGuidTranslator(ISqlExpressionFactory sqlExpressionFactory)
         {
+            _sqlExpressionFactory = sqlExpressionFactory;
+        }
+
+        public virtual SqlExpression Translate(SqlExpression instance, MethodInfo method, IReadOnlyList<SqlExpression> arguments)
+        {
+            return _methodInfo.Equals(method)
+                ? _sqlExpressionFactory.Function(
+                    "NEWID",
+                    Array.Empty<SqlExpression>(),
+                    method.ReturnType)
+                : null;
         }
     }
 }

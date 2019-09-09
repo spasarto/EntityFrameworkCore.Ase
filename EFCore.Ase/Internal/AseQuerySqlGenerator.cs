@@ -1,18 +1,69 @@
-﻿using JetBrains.Annotations;
-using Microsoft.EntityFrameworkCore.Query.Expressions;
-using Microsoft.EntityFrameworkCore.Query.Sql;
-using Microsoft.EntityFrameworkCore.Storage;
-using Remotion.Linq.Clauses;
-using Remotion.Linq.Clauses.Expressions;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
+﻿using Microsoft.EntityFrameworkCore.Query;
+using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
 using System.Linq.Expressions;
-using System.Reflection;
 
 namespace EntityFrameworkCore.Ase.Internal
 {
+    public class AseQuerySqlGenerator : QuerySqlGenerator
+    {
+        public AseQuerySqlGenerator(QuerySqlGeneratorDependencies dependencies)
+            : base(dependencies)
+        {
+        }
+
+        protected override void GenerateTop(SelectExpression selectExpression)
+        {
+            if (selectExpression.Limit != null
+                && selectExpression.Offset == null)
+            {
+                Sql.Append("TOP ");
+
+                Visit(selectExpression.Limit);
+
+                Sql.Append(" ");
+            }
+        }
+
+        protected override void GenerateLimitOffset(SelectExpression selectExpression)
+        {
+            // Note: For Limit without Offset, SqlServer generates TOP()
+            if (selectExpression.Offset != null)
+            {
+                Sql.AppendLine()
+                    .Append("OFFSET ");
+
+                Visit(selectExpression.Offset);
+
+                Sql.Append(" ROWS");
+
+                if (selectExpression.Limit != null)
+                {
+                    Sql.Append(" FETCH NEXT ");
+
+                    Visit(selectExpression.Limit);
+
+                    Sql.Append(" ROWS ONLY");
+                }
+            }
+        }
+
+        protected override Expression VisitSqlFunction(SqlFunctionExpression sqlFunctionExpression)
+        {
+            if (!sqlFunctionExpression.IsBuiltIn
+                && string.IsNullOrEmpty(sqlFunctionExpression.Schema))
+            {
+                sqlFunctionExpression = SqlFunctionExpression.Create(
+                    schema: "dbo",
+                    sqlFunctionExpression.Name,
+                    sqlFunctionExpression.Arguments,
+                    sqlFunctionExpression.Type,
+                    sqlFunctionExpression.TypeMapping);
+            }
+
+            return base.VisitSqlFunction(sqlFunctionExpression);
+        }
+    }
+    /*
     internal class AseQuerySqlGenerator : DefaultQuerySqlGenerator
     {
         private readonly Lazy<IRelationalCommandBuilder> _relationalCommandBuilder2;
@@ -80,4 +131,5 @@ namespace EntityFrameworkCore.Ase.Internal
             return v;
         }
     }
+    */
 }

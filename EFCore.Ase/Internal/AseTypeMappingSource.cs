@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -10,6 +11,32 @@ using System.Linq;
 
 namespace EntityFrameworkCore.Ase.Internal
 {
+    public class AseGuidTypeMapping : RelationalTypeMapping
+    {
+        public AseGuidTypeMapping()
+            : base(new RelationalTypeMappingParameters(
+                    new CoreTypeMappingParameters(
+                        typeof(Guid),
+                        new GuidToStringConverter(),
+                        new ValueComparer<Guid>(false),
+                        new ValueComparer<Guid>(false)),
+                        "varchar",
+                        StoreTypePostfix.Size,
+                        System.Data.DbType.Guid,
+                        false,
+                        36,
+                        true,
+                        null,
+                        null))
+        {
+        }
+
+        protected override RelationalTypeMapping Clone(RelationalTypeMappingParameters parameters)
+        {
+            return new AseGuidTypeMapping();
+        }
+    }
+
     internal class AseTypeMappingSource : RelationalTypeMappingSource
     {
         //private readonly RelationalTypeMapping _sqlVariant
@@ -86,7 +113,7 @@ namespace EntityFrameworkCore.Ase.Internal
             = new DateTimeOffsetTypeMapping("datetimeoffset");
 
         private readonly AseGuidTypeMapping _uniqueidentifier
-            = new AseGuidTypeMapping();
+            = new AseGuidTypeMapping(); //GuidTypeMapping("uniqueidentifier", DbType.Guid);
 
         private readonly DecimalTypeMapping _decimal
             = new AseDecimalTypeMapping("decimal(18, 2)", precision: 18, scale: 2, storeTypePostfix: StoreTypePostfix.PrecisionAndScale);

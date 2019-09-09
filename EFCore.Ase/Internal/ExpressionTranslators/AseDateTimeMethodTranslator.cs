@@ -1,19 +1,12 @@
-﻿
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
 using System.Reflection;
-using Microsoft.EntityFrameworkCore.Query.Expressions;
-using Microsoft.EntityFrameworkCore.Query.ExpressionTranslators;
+using Microsoft.EntityFrameworkCore.Query;
+using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
 
 namespace EntityFrameworkCore.Ase.Internal.ExpressionTranslators
 {
-    /// <summary>
-    ///     This API supports the Entity Framework Core infrastructure and is not intended to be used
-    ///     directly from your code. This API may change or be removed in future releases.
-    /// </summary>
-    public class AseDateAddTranslator : IMethodCallTranslator
+    public class AseDateTimeMethodTranslator : IMethodCallTranslator
     {
         private readonly Dictionary<MethodInfo, string> _methodInfoDatePartMapping = new Dictionary<MethodInfo, string>
         {
@@ -33,34 +26,32 @@ namespace EntityFrameworkCore.Ase.Internal.ExpressionTranslators
             { typeof(DateTimeOffset).GetRuntimeMethod(nameof(DateTimeOffset.AddMilliseconds), new[] { typeof(double) }), "millisecond" }
         };
 
-        /// <summary>
-        ///     Translates the given method call expression.
-        /// </summary>
-        /// <param name="methodCallExpression">The method call expression.</param>
-        /// <returns>
-        ///     A SQL expression representing the translated MethodCallExpression.
-        /// </returns>
-        public virtual Expression Translate(MethodCallExpression methodCallExpression)
-        {
-            if (_methodInfoDatePartMapping.TryGetValue(methodCallExpression.Method, out var datePart))
-            {
-                var amountToAdd = methodCallExpression.Arguments.First();
+        private readonly ISqlExpressionFactory _sqlExpressionFactory;
 
+        public AseDateTimeMethodTranslator(
+            ISqlExpressionFactory sqlExpressionFactory)
+        {
+            _sqlExpressionFactory = sqlExpressionFactory;
+        }
+
+        public virtual SqlExpression Translate(SqlExpression instance, MethodInfo method, IReadOnlyList<SqlExpression> arguments)
+        {
+            if (_methodInfoDatePartMapping.TryGetValue(method, out var datePart))
+            {
                 return !datePart.Equals("year")
-                    && !datePart.Equals("month")
-                    && amountToAdd is ConstantExpression constantExpression
-                    && ((double)constantExpression.Value >= int.MaxValue
-                        || (double)constantExpression.Value <= int.MinValue)
+                       && !datePart.Equals("month")
+                       && arguments[0] is SqlConstantExpression sqlConstant
+                       && ((double)sqlConstant.Value >= int.MaxValue
+                           || (double)sqlConstant.Value <= int.MinValue)
                     ? null
-                    : new SqlFunctionExpression(
-                    functionName: "DATEADD",
-                    returnType: methodCallExpression.Type,
-                    arguments: new[]
-                    {
-                        new SqlFragmentExpression(datePart),
-                        amountToAdd,
-                        methodCallExpression.Object
-                    });
+                    : _sqlExpressionFactory.Function(
+                        "DATEADD",
+                        new[]
+                        {
+                            _sqlExpressionFactory.Fragment(datePart), _sqlExpressionFactory.Convert(arguments[0], typeof(int)), instance
+                        },
+                        instance.Type,
+                        instance.TypeMapping);
             }
 
             return null;

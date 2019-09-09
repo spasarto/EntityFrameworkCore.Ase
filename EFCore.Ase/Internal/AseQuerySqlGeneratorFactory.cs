@@ -1,16 +1,17 @@
-﻿using Microsoft.EntityFrameworkCore.Query.Expressions;
-using Microsoft.EntityFrameworkCore.Query.Sql;
+﻿using Microsoft.EntityFrameworkCore.Query;
 
 namespace EntityFrameworkCore.Ase.Internal
 {
-    internal class AseQuerySqlGeneratorFactory : QuerySqlGeneratorFactoryBase
+    internal class AseQuerySqlGeneratorFactory : IQuerySqlGeneratorFactory
     {
+        private readonly QuerySqlGeneratorDependencies _dependencies;
+
         public AseQuerySqlGeneratorFactory(QuerySqlGeneratorDependencies dependencies)
-            : base(dependencies)
         {
+            _dependencies = dependencies;
         }
 
-        public override IQuerySqlGenerator CreateDefault(SelectExpression selectExpression)
-            => new AseQuerySqlGenerator(Dependencies, selectExpression);
+        public virtual QuerySqlGenerator Create()
+            => new AseQuerySqlGenerator(_dependencies);
     }
 }

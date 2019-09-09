@@ -1,8 +1,9 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore.Query;
+using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
+using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
-using Microsoft.EntityFrameworkCore.Query.Expressions;
-using Microsoft.EntityFrameworkCore.Query.ExpressionTranslators;
+using System.Reflection;
 
 namespace EntityFrameworkCore.Ase.Internal.ExpressionTranslators
 {
@@ -25,60 +26,70 @@ namespace EntityFrameworkCore.Ase.Internal.ExpressionTranslators
                 { nameof(DateTime.Millisecond), "millisecond" }
             };
 
-        /// <summary>
-        ///     This API supports the Entity Framework Core infrastructure and is not intended to be used
-        ///     directly from your code. This API may change or be removed in future releases.
-        /// </summary>
-        public virtual Expression Translate(MemberExpression memberExpression)
+        private readonly ISqlExpressionFactory _sqlExpressionFactory;
+
+        public AseDateTimeMemberTranslator(ISqlExpressionFactory sqlExpressionFactory)
         {
-            var declaringType = memberExpression.Member.DeclaringType;
+            _sqlExpressionFactory = sqlExpressionFactory;
+        }
+
+        public virtual SqlExpression Translate(SqlExpression instance, MemberInfo member, Type returnType)
+        {
+            var declaringType = member.DeclaringType;
+
             if (declaringType == typeof(DateTime)
                 || declaringType == typeof(DateTimeOffset))
             {
-                var memberName = memberExpression.Member.Name;
+                var memberName = member.Name;
 
                 if (_datePartMapping.TryGetValue(memberName, out var datePart))
                 {
-                    return new SqlFunctionExpression(
+                    return _sqlExpressionFactory.Function(
                         "DATEPART",
-                        memberExpression.Type,
-                        arguments: new[] { new SqlFragmentExpression(datePart), memberExpression.Expression });
+                        new[] { _sqlExpressionFactory.Fragment(datePart), instance },
+                        returnType);
                 }
 
                 switch (memberName)
                 {
-                    case nameof(DateTime.Now):
-                        return declaringType == typeof(DateTimeOffset)
-                            ? new SqlFunctionExpression("SYSDATETIMEOFFSET", memberExpression.Type)
-                            : new SqlFunctionExpression("GETDATE", memberExpression.Type);
-
-                    case nameof(DateTime.UtcNow):
-                        return declaringType == typeof(DateTimeOffset)
-                            ? (Expression)new ExplicitCastExpression(
-                                new SqlFunctionExpression("SYSUTCDATETIME", memberExpression.Type),
-                                typeof(DateTimeOffset))
-                            : new SqlFunctionExpression("GETUTCDATE", memberExpression.Type);
-
                     case nameof(DateTime.Date):
-                        return new SqlFunctionExpression(
+                        return _sqlExpressionFactory.Function(
                             "CONVERT",
-                            memberExpression.Type,
-                            new[] { new SqlFragmentExpression("date"), memberExpression.Expression });
-
-                    case nameof(DateTime.Today):
-                        return new SqlFunctionExpression(
-                            "CONVERT",
-                            memberExpression.Type,
-                            new Expression[]
-                            {
-                                new SqlFragmentExpression("date"),
-                                new SqlFunctionExpression("GETDATE", memberExpression.Type)
-                            });
+                            new[] { _sqlExpressionFactory.Fragment("date"), instance },
+                            returnType,
+                            instance.TypeMapping);
 
                     case nameof(DateTime.TimeOfDay):
-                        return new ExplicitCastExpression(
-                            memberExpression.Expression,
-                            memberExpression.Type);
+                        return _sqlExpressionFactory.Convert(instance, returnType);
+
+                    case nameof(DateTime.Now):
+                        return _sqlExpressionFactory.Function(
+                            declaringType == typeof(DateTime) ? "GETDATE" : "SYSDATETIMEOFFSET",
+                            Array.Empty<SqlExpression>(),
+                            returnType);
+
+                    case nameof(DateTime.UtcNow):
+                        var serverTranslation = _sqlExpressionFactory.Function(
+                            declaringType == typeof(DateTime) ? "GETUTCDATE" : "SYSUTCDATETIME",
+                            Array.Empty<SqlExpression>(),
+                            returnType);
+
+                        return declaringType == typeof(DateTime)
+                            ? (SqlExpression)serverTranslation
+                            : _sqlExpressionFactory.Convert(serverTranslation, returnType);
+
+                    case nameof(DateTime.Today):
+                        return _sqlExpressionFactory.Function(
+                            "CONVERT",
+                            new SqlExpression[]
+                            {
+                                _sqlExpressionFactory.Fragment("date"),
+                                _sqlExpressionFactory.Function(
+                                    "GETDATE",
+                                    Array.Empty<SqlExpression>(),
+                                    typeof(DateTime))
+                            },
+                            returnType);
                 }
             }
 
