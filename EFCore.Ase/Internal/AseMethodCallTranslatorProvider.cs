@@ -1,7 +1,7 @@
 ﻿using EntityFrameworkCore.Ase.Internal.ExpressionTranslators;
 using Microsoft.EntityFrameworkCore.Query;
 
-namespace EntityFrameworkCore.Ase
+namespace EntityFrameworkCore.Ase.Internal
 {
     class AseMethodCallTranslatorProvider : RelationalMethodCallTranslatorProvider
     {

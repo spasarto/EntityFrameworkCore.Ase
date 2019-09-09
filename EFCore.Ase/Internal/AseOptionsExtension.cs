@@ -2,7 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using System.Collections.Generic;
 
-namespace EntityFrameworkCore.Ase
+namespace EntityFrameworkCore.Ase.Internal
 {
     public class AseOptionsExtension : RelationalOptionsExtension
     {
