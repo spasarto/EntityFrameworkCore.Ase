@@ -17,7 +17,7 @@ namespace EntityFrameworkCore.Ase.Internal
         {
             return new AseOptionsExtension();
         }
-
+        
         private sealed class ExtensionInfo : RelationalExtensionInfo
         {
             public ExtensionInfo(IDbContextOptionsExtension extension)

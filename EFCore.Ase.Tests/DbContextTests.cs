@@ -1,7 +1,9 @@
 ﻿using EntityFrameworkCore.Ase.Tests.Infastructure;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace EntityFrameworkCore.Ase.Tests
@@ -39,6 +41,53 @@ namespace EntityFrameworkCore.Ase.Tests
             var orders = context.Set<Models.Order>().ToList();
             Assert.AreEqual(1, orders.Count);
         }
+
+        [TestMethod]
+        public void TestWhereParameter()
+        {
+            var emptyGuid = Guid.Empty;
+            
+            var context = new TestDbContext(_options.ConnectionString);
+            var orders = context.Set<Models.Order>()
+                                .Where(o => o.GuidId == emptyGuid)
+                                .ToList();
+
+            Assert.AreEqual(0, orders.Count);
+        }
+
+        [TestMethod]
+        public void TestWhereInParameter()
+        {
+            var names = new List<string>()
+            {
+                "one", "two", "three"
+            };
+
+            var context = new TestDbContext(_options.ConnectionString);
+            var orders = context.Set<Models.Order>()
+                                .Where(o => names.Contains(o.Name))
+                                .ToList();
+
+            Assert.AreEqual(0, orders.Count);
+        }
+
+
+        [TestMethod]
+        public void Take()
+        {
+            var context = new TestDbContext(_options.ConnectionString);
+            var orders = context.Set<Models.Order>().Take(1).ToList();
+            Assert.AreEqual(1, orders.Count);
+        }
+
+
+        //[TestMethod]
+        //public void Skip()
+        //{
+        //    var context = new TestDbContext(_options.ConnectionString);
+        //    var orders = context.Set<Models.Order>().Skip(1).ToList();
+        //    Assert.AreEqual(0, orders.Count);
+        //}
 
 
         [TestMethod]
@@ -78,6 +127,8 @@ namespace EntityFrameworkCore.Ase.Tests
                 base.OnConfiguring(optionsBuilder);
 
                 optionsBuilder.UseAse(_connString);
+                optionsBuilder.EnableSensitiveDataLogging();
+                //optionsBuilder.UseLoggerFactory(LoggerFactory.Create(b => b.AddConsole()));
             }
 
             protected override void OnModelCreating(ModelBuilder modelBuilder)

@@ -1,24 +1,46 @@
 ﻿using Microsoft.EntityFrameworkCore.Query;
 using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
+using Microsoft.EntityFrameworkCore.Storage;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions;
+using System.Reflection;
 
 namespace EntityFrameworkCore.Ase.Internal
 {
     public class AseQuerySqlGenerator : QuerySqlGenerator
     {
-        public AseQuerySqlGenerator(QuerySqlGeneratorDependencies dependencies)
+        private readonly IAseOptions _aseOptions;
+
+        public AseQuerySqlGenerator(QuerySqlGeneratorDependencies dependencies, IAseOptions aseOptions)
             : base(dependencies)
         {
+            _aseOptions = aseOptions;
         }
 
         protected override void GenerateTop(SelectExpression selectExpression)
         {
-            if (selectExpression.Limit != null
-                && selectExpression.Offset == null)
+            if (selectExpression.Limit != null)
             {
-                Sql.Append("TOP ");
+                Sql.Append(" TOP ");
 
-                Visit(selectExpression.Limit);
+                if (selectExpression.Limit is SqlConstantExpression constantExpression)
+                {
+                    Sql.Append(constantExpression.Value);
+                }
+
+                Sql.Append(" ");
+            }
+
+            if (selectExpression.Offset != null)
+            {
+                Sql.Append(" START AT ");
+
+                if (selectExpression.Offset is SqlConstantExpression constantExpression)
+                {
+                    Sql.Append(constantExpression.Value);
+                }
 
                 Sql.Append(" ");
             }
@@ -26,25 +48,21 @@ namespace EntityFrameworkCore.Ase.Internal
 
         protected override void GenerateLimitOffset(SelectExpression selectExpression)
         {
-            // Note: For Limit without Offset, SqlServer generates TOP()
-            if (selectExpression.Offset != null)
-            {
-                Sql.AppendLine()
-                    .Append("OFFSET ");
+            // START AT comes after TOP, where as this is called after the main query.
+            // See GenerateTop
+        }
 
-                Visit(selectExpression.Offset);
+        protected override void GenerateOrderings(SelectExpression selectExpression)
+        {
+            // base implementation will generate "ORDER BY (SELECT 1)" when there is a Skip value, which isn't supported.
+            if (selectExpression.Orderings.Any())
+                base.GenerateOrderings(selectExpression);
+        }
 
-                Sql.Append(" ROWS");
-
-                if (selectExpression.Limit != null)
-                {
-                    Sql.Append(" FETCH NEXT ");
-
-                    Visit(selectExpression.Limit);
-
-                    Sql.Append(" ROWS ONLY");
-                }
-            }
+        public override IRelationalCommand GetCommand(SelectExpression selectExpression)
+        {
+            var cmd = base.GetCommand(selectExpression);
+            return cmd;
         }
 
         protected override Expression VisitSqlFunction(SqlFunctionExpression sqlFunctionExpression)
@@ -63,73 +81,4 @@ namespace EntityFrameworkCore.Ase.Internal
             return base.VisitSqlFunction(sqlFunctionExpression);
         }
     }
-    /*
-    internal class AseQuerySqlGenerator : DefaultQuerySqlGenerator
-    {
-        private readonly Lazy<IRelationalCommandBuilder> _relationalCommandBuilder2;
-        private int _levels;
-
-        public AseQuerySqlGenerator(QuerySqlGeneratorDependencies dependencies, SelectExpression selectExpression)
-            : base(dependencies, selectExpression)
-        {
-            var relationalCommandBuilderField = typeof(DefaultQuerySqlGenerator).GetField("_relationalCommandBuilder", BindingFlags.Instance | BindingFlags.NonPublic);
-            _relationalCommandBuilder2 = new Lazy<IRelationalCommandBuilder>(() => (IRelationalCommandBuilder)relationalCommandBuilderField.GetValue(this));
-        }
-
-        protected override void GenerateTop(SelectExpression selectExpression)
-        {
-            if (selectExpression.Limit != null)
-            {
-                _relationalCommandBuilder2.Value.Append("TOP ");
-
-                if (selectExpression.Limit is ConstantExpression constantExpression)
-                {
-                    _relationalCommandBuilder2.Value.Append(constantExpression.Value);
-                }
-                else if(ParameterValues.TryGetValue(selectExpression.Limit.ToString(), out object top))
-                {
-                    _relationalCommandBuilder2.Value.Append(top);
-                }
-
-                _relationalCommandBuilder2.Value.Append(" ");
-            }
-
-            if (selectExpression.Offset != null)
-            {
-                _relationalCommandBuilder2.Value.Append("START AT ");
-
-                if (selectExpression.Offset is ConstantExpression constantExpression)
-                {
-                    _relationalCommandBuilder2.Value.Append(constantExpression.Value);
-                }
-                else if(ParameterValues.TryGetValue(selectExpression.Offset.ToString(), out object offset))
-                {
-                    _relationalCommandBuilder2.Value.Append(offset);
-                }
-
-                _relationalCommandBuilder2.Value.Append(" ");
-            }
-        }
-
-        public override IRelationalCommand GenerateSql(IReadOnlyDictionary<string, object> parameterValues)
-        {
-            _levels = 0;
-            var r = base.GenerateSql(parameterValues);
-            return r;
-        }
-        
-        public override Expression VisitSelect(SelectExpression selectExpression)
-        {
-            if (++_levels > 1)
-            {
-                selectExpression.ClearOrderBy();
-            }
-
-            var v = base.VisitSelect(selectExpression);
-
-            _levels--;
-            return v;
-        }
-    }
-    */
 }

@@ -68,5 +68,10 @@ namespace EntityFrameworkCore.Ase.Internal.ExpressionTranslators
         {
             return expression.TypeMapping?.StoreType;
         }
+
+        public override SqlExpression Translate(Expression expression)
+        {
+            return base.Translate(expression);
+        }
     }
 }

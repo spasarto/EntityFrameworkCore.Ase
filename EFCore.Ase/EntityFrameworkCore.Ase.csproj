@@ -4,15 +4,15 @@
     <TargetFramework>netstandard2.1</TargetFramework>
     <LangVersion>latest</LangVersion>
     <AssemblyName>EntityFrameworkCore.Ase</AssemblyName>
-    <Version>3.0.0-preview9.19423.6</Version>
+    <Version>3.0.0-preview9.19423.7</Version>
     <Description>A very barebones implementation of EntityFrameworkCore. Supports basic CRUD interactions. Lots of untested features.</Description>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageTags>EntityFrameworkCore ASE Sybase</PackageTags>
     <PackageLicenseUrl>https://opensource.org/licenses/MIT</PackageLicenseUrl>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
-    <PackageReleaseNotes>Fixed a bug with the table alias generated was longer than the max supported alias</PackageReleaseNotes>
-    <AssemblyVersion>3.0.0.0</AssemblyVersion>
-    <FileVersion>3.0.0.0</FileVersion>
+    <PackageReleaseNotes>Updated to support efcore3</PackageReleaseNotes>
+    <AssemblyVersion>3.0.0.1</AssemblyVersion>
+    <FileVersion>3.0.0.1</FileVersion>
     <PackageProjectUrl>https://github.com/spasarto/EntityFrameworkCore.Ase</PackageProjectUrl>
     <Authors>Adam Johnson</Authors>
   </PropertyGroup>
