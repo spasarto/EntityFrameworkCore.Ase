@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.2</TargetFramework>
-
+    <UserSecretsId>aseSecrets</UserSecretsId>
     <IsPackable>false</IsPackable>
   </PropertyGroup>
 

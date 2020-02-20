@@ -24,6 +24,10 @@ namespace EntityFrameworkCore.Ase.Tests
         {
             TestConfiguration.Initialize();
             _options = TestConfiguration.GetOptions<AseOptions>().Value;
+
+            if (_options.ConnectionString == null)
+                throw new ArgumentNullException("Connection string not specified. Set it with: dotnet user-secrets set \"AseOptions:ConnectionString\" \"value\" --id aseSecrets");
+
             _migrations = new PoorMansMigration(_options);
 
             _migrations.Up();
@@ -40,9 +44,18 @@ namespace EntityFrameworkCore.Ase.Tests
         {
             var context = new TestDbContext(_options.ConnectionString);
             var orders = context.Set<Models.Order>().ToList();
-            Assert.AreEqual(1, orders.Count);
+            Assert.AreEqual(2, orders.Count);
         }
 
+        [TestMethod]
+        public void TestFilter()
+        {
+            var context = new TestDbContext(_options.ConnectionString);
+            var orders = context.Set<Models.Order>()
+                                .Where(o => o.Id == 2 && o.Name == "b")
+                                .ToList();
+            Assert.AreEqual(1, orders.Count);
+        }
 
         [TestMethod]
         public void TestSaveChanges()
