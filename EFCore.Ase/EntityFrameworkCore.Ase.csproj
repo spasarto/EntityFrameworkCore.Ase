@@ -18,13 +18,13 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="AdoNetCore.AseClient" Version="0.14.0" />
-    <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="2.9.4">
+    <PackageReference Include="AdoNetCore.AseClient" Version="0.16.0" />
+    <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="2.9.8">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.0.0-preview9.19423.6" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="3.0.0-preview9.19423.6" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.2" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="3.1.2" />
   </ItemGroup>
 
 </Project>
