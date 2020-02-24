@@ -1,8 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp3.0</TargetFramework>
-    <UserSecretsId>79a3edd0-2092-40ff-a04d-dcb46d5cafff</UserSecretsId>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <UserSecretsId>aseSecrets</UserSecretsId>
     <IsPackable>false</IsPackable>
   </PropertyGroup>
 

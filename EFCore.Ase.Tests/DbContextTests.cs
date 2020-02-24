@@ -21,7 +21,7 @@ namespace EntityFrameworkCore.Ase.Tests
             _options = TestConfiguration.GetOptions<AseOptions>().Value;
 
             if (_options.ConnectionString == null)
-                throw new Exception("Connection string not provided in the application configuration. Update app secret 'ConnectionString' with your connection string.");
+                throw new ArgumentNullException("Connection string not specified. Set it with: dotnet user-secrets set \"AseOptions:ConnectionString\" \"value\" --id aseSecrets");
 
             _migrations = new PoorMansMigration(_options);
 
@@ -39,6 +39,16 @@ namespace EntityFrameworkCore.Ase.Tests
         {
             var context = new TestDbContext(_options.ConnectionString);
             var orders = context.Set<Models.Order>().ToList();
+            Assert.AreEqual(2, orders.Count);
+        }
+
+        [TestMethod]
+        public void TestFilter()
+        {
+            var context = new TestDbContext(_options.ConnectionString);
+            var orders = context.Set<Models.Order>()
+                                .Where(o => o.Id == 2 && o.Name == "b")
+                                .ToList();
             Assert.AreEqual(1, orders.Count);
         }
 
