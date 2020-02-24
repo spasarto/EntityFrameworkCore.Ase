@@ -19,9 +19,9 @@ namespace EntityFrameworkCore.Ase.Tests.Infastructure
             where TOptions : class, new()
         {
             TOptions options = new TOptions();
-                        
-            (config ?? Configuration).Bind(options);
             
+            (config ?? Configuration).Bind(typeof(TOptions).Name, options);
+
             return Options.Create(options);
         }
     }
