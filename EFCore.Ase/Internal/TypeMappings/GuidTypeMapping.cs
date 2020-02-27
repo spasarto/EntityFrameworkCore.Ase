@@ -24,5 +24,10 @@ namespace EntityFrameworkCore.Ase.Internal.TypeMappings
                         null))
         {
         }
+
+        protected override string GenerateNonNullSqlLiteral(object value)
+            => IsUnicode
+                ? $"N'{value.ToString()}'" // Interpolation okay; strings
+                : $"'{value.ToString()}'";
     }
 }

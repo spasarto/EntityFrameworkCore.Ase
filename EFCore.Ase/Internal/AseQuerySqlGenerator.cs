@@ -60,6 +60,11 @@ namespace EntityFrameworkCore.Ase.Internal
             }
         }
 
+        protected override void GenerateLimitOffset(SelectExpression selectExpression)
+        {
+            
+        }
+
         public override IRelationalCommand GenerateSql(IReadOnlyDictionary<string, object> parameterValues)
         {
             _levels = 0;
