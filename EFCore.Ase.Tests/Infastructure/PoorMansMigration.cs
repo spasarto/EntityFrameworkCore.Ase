@@ -29,6 +29,9 @@ namespace EntityFrameworkCore.Ase.Tests.Infastructure
 
                     cmd.CommandText = "insert into test_order (id, name, guid_id) values (2, 'b', 'EA7D2349-87D6-4178-A6B5-F07D8293589A')";
                     cmd.ExecuteNonQuery();
+
+                    cmd.CommandText = "insert into test_order (id, name, guid_id) values (3, 'b', 'DA7D2349-87D6-4178-A6B5-F07D8293589A')";
+                    cmd.ExecuteNonQuery();
                 }
             }
             catch

@@ -39,7 +39,7 @@ namespace EntityFrameworkCore.Ase.Tests
         {
             var context = new TestDbContext(_options.ConnectionString);
             var orders = context.Set<Models.Order>().ToList();
-            Assert.AreEqual(2, orders.Count);
+            Assert.AreEqual(3, orders.Count);
         }
 
         [TestMethod]
@@ -50,6 +50,17 @@ namespace EntityFrameworkCore.Ase.Tests
                                 .Where(o => o.Id == 2 && o.Name == "b")
                                 .ToList();
             Assert.AreEqual(1, orders.Count);
+        }
+        
+        [TestMethod]
+        public void TestContainsGuid()
+        {
+            var guids = new[] { Guid.Parse("EA7D2349-87D6-4178-A6B5-F07D8293589A"), Guid.Parse("DA7D2349-87D6-4178-A6B5-F07D8293589A") };
+            var context = new TestDbContext(_options.ConnectionString);
+            var orders = context.Set<Models.Order>()
+                                .Where(o => guids.Contains(o.GuidId))
+                                .ToList();
+            Assert.AreEqual(2, orders.Count);
         }
 
         [TestMethod]
