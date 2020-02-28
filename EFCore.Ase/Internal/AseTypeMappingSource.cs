@@ -11,32 +11,6 @@ using System.Linq;
 
 namespace EntityFrameworkCore.Ase.Internal
 {
-    public class AseGuidTypeMapping : RelationalTypeMapping
-    {
-        public AseGuidTypeMapping()
-            : base(new RelationalTypeMappingParameters(
-                    new CoreTypeMappingParameters(
-                        typeof(Guid),
-                        new GuidToStringConverter(),
-                        new ValueComparer<Guid>(false),
-                        new ValueComparer<Guid>(false)),
-                        "varchar",
-                        StoreTypePostfix.Size,
-                        System.Data.DbType.Guid,
-                        false,
-                        36,
-                        true,
-                        null,
-                        null))
-        {
-        }
-
-        protected override RelationalTypeMapping Clone(RelationalTypeMappingParameters parameters)
-        {
-            return new AseGuidTypeMapping();
-        }
-    }
-
     internal class AseTypeMappingSource : RelationalTypeMappingSource
     {
         //private readonly RelationalTypeMapping _sqlVariant

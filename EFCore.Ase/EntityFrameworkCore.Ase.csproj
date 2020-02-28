@@ -4,15 +4,15 @@
     <TargetFramework>netstandard2.1</TargetFramework>
     <LangVersion>latest</LangVersion>
     <AssemblyName>EntityFrameworkCore.Ase</AssemblyName>
-    <Version>3.1.2.0</Version>
+    <Version>3.1.2.1</Version>
     <Description>A very barebones implementation of EntityFrameworkCore. Supports basic CRUD interactions. Lots of untested features.</Description>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageTags>EntityFrameworkCore ASE Sybase</PackageTags>
     <PackageLicenseUrl>https://opensource.org/licenses/MIT</PackageLicenseUrl>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
-    <PackageReleaseNotes>Updated to support efcore3</PackageReleaseNotes>
-    <AssemblyVersion>3.1.2.0</AssemblyVersion>
-    <FileVersion>3.1.2.0</FileVersion>
+    <PackageReleaseNotes>Fixed a bug with guid contains</PackageReleaseNotes>
+    <AssemblyVersion>3.1.2.1</AssemblyVersion>
+    <FileVersion>3.1.2.1</FileVersion>
     <PackageProjectUrl>https://github.com/spasarto/EntityFrameworkCore.Ase</PackageProjectUrl>
     <Authors>Adam Johnson</Authors>
   </PropertyGroup>
