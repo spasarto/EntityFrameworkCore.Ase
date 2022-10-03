@@ -1,11 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
+﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore.Metadata.Conventions;
 using Microsoft.EntityFrameworkCore.Metadata.Conventions.Infrastructure;
 
 namespace EntityFrameworkCore.Ase.Internal.ExpressionTranslators
 {
-    public class AseValueGenerationStrategyConvention : IModelInitializedConvention, IModelFinalizedConvention
+    public class AseValueGenerationStrategyConvention : IModelInitializedConvention, IModelFinalizingConvention
     {
         /// <summary>
         ///     Creates a new instance of <see cref="SqlServerValueGenerationStrategyConvention" />.
@@ -40,8 +39,9 @@ namespace EntityFrameworkCore.Ase.Internal.ExpressionTranslators
         /// </summary>
         /// <param name="modelBuilder"> The builder for the model. </param>
         /// <param name="context"> Additional information associated with convention execution. </param>
-        public virtual void ProcessModelFinalized(
-            IConventionModelBuilder modelBuilder, IConventionContext<IConventionModelBuilder> context)
+        public virtual void ProcessModelFinalizing(
+            IConventionModelBuilder modelBuilder,
+            IConventionContext<IConventionModelBuilder> context)
         {
             //foreach (var entityType in modelBuilder.Metadata.GetEntityTypes())
             //{

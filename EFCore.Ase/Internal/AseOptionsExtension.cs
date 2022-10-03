@@ -29,7 +29,7 @@ namespace EntityFrameworkCore.Ase.Internal
 
             public override string LogFragment => string.Empty;
 
-            public override long GetServiceProviderHashCode() => 1;
+            public override int GetServiceProviderHashCode() => 1;
 
             public override void PopulateDebugInfo(IDictionary<string, string> debugInfo) { }
         }

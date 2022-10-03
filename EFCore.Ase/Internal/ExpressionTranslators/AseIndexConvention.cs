@@ -74,20 +74,21 @@ namespace EntityFrameworkCore.Ase.Internal.ExpressionTranslators
         /// <summary>
         ///     Called after the uniqueness for an index is changed.
         /// </summary>
-        /// <param name="indexBuilder"> The builder for the index. </param>
-        /// <param name="context"> Additional information associated with convention execution. </param>
+        /// <param name="indexBuilder">The builder for the index.</param>
+        /// <param name="context">Additional information associated with convention execution.</param>
         public virtual void ProcessIndexUniquenessChanged(
-            IConventionIndexBuilder indexBuilder, IConventionContext<IConventionIndexBuilder> context)
+            IConventionIndexBuilder indexBuilder,
+            IConventionContext<bool?> context)
             => SetIndexFilter(indexBuilder);
 
         /// <summary>
         ///     Called after the nullability for a property is changed.
         /// </summary>
-        /// <param name="propertyBuilder"> The builder for the property. </param>
-        /// <param name="context"> Additional information associated with convention execution. </param>
+        /// <param name="propertyBuilder">The builder for the property.</param>
+        /// <param name="context">Additional information associated with convention execution.</param>
         public virtual void ProcessPropertyNullabilityChanged(
             IConventionPropertyBuilder propertyBuilder,
-            IConventionContext<IConventionPropertyBuilder> context)
+            IConventionContext<bool?> context)
         {
             foreach (var index in propertyBuilder.Metadata.GetContainingIndexes())
             {
@@ -145,13 +146,13 @@ namespace EntityFrameworkCore.Ase.Internal.ExpressionTranslators
             var index = indexBuilder.Metadata;
             if (index.IsUnique
                 //&& index.IsClustered() != true
-                && index.Properties
-                    .Any(property => property.IsColumnNullable()))
+                && GetNullableColumns(index) is List<string> nullableColumns
+                && nullableColumns.Count > 0)
             {
                 if (columnNameChanged
                     || index.GetFilter() == null)
                 {
-                    indexBuilder.HasFilter(CreateIndexFilter(index));
+                    indexBuilder.HasFilter(CreateIndexFilter(nullableColumns));
                 }
             }
             else
@@ -165,13 +166,8 @@ namespace EntityFrameworkCore.Ase.Internal.ExpressionTranslators
             return indexBuilder;
         }
 
-        private string CreateIndexFilter(IIndex index)
+        private string CreateIndexFilter(List<string> nullableColumns)
         {
-            var nullableColumns = index.Properties
-                .Where(property => property.IsColumnNullable())
-                .Select(property => property.GetColumnName())
-                .ToList();
-
             var builder = new StringBuilder();
             for (var i = 0; i < nullableColumns.Count; i++)
             {
@@ -186,6 +182,35 @@ namespace EntityFrameworkCore.Ase.Internal.ExpressionTranslators
             }
 
             return builder.ToString();
+        }
+
+        private List<string>? GetNullableColumns(IReadOnlyIndex index)
+        {
+            var tableName = index.DeclaringEntityType.GetTableName();
+            if (tableName == null)
+            {
+                return null;
+            }
+
+            var nullableColumns = new List<string>();
+            var table = StoreObjectIdentifier.Table(tableName, index.DeclaringEntityType.GetSchema());
+            foreach (var property in index.Properties)
+            {
+                var columnName = property.GetColumnName(table);
+                if (columnName == null)
+                {
+                    return null;
+                }
+
+                if (!property.IsColumnNullable(table))
+                {
+                    continue;
+                }
+
+                nullableColumns.Add(columnName);
+            }
+
+            return nullableColumns;
         }
     }
 }

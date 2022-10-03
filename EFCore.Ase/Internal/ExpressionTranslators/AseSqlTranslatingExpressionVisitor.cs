@@ -33,9 +33,9 @@ namespace EntityFrameworkCore.Ase.Internal.ExpressionTranslators
 
         public AseSqlTranslatingExpressionVisitor(
             RelationalSqlTranslatingExpressionVisitorDependencies dependencies,
-            IModel model,
+            QueryCompilationContext queryCompilationContext,
             QueryableMethodTranslatingExpressionVisitor queryableMethodTranslatingExpressionVisitor)
-            : base(dependencies, model, queryableMethodTranslatingExpressionVisitor)
+            : base(dependencies, queryCompilationContext, queryableMethodTranslatingExpressionVisitor)
         {
             _sqlExpressionFactory = dependencies.SqlExpressionFactory;
         }
@@ -57,7 +57,7 @@ namespace EntityFrameworkCore.Ase.Internal.ExpressionTranslators
                 : visitedExpression;
         }
 
-        public override SqlExpression TranslateLongCount(Expression expression = null)
+        public override SqlExpression? TranslateLongCount(SqlExpression sqlExpression)
         {
             // TODO: Translate Count with predicate for GroupBy
             return _sqlExpressionFactory.ApplyDefaultTypeMapping(

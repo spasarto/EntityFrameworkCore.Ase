@@ -22,7 +22,7 @@ namespace EntityFrameworkCore.Ase.Internal.ExpressionTranslators
             AseSequenceValueGeneratorState generatorState,
             IAseConnection connection,
             IRawSqlCommandBuilder rawSqlCommandBuilder,
-            IDiagnosticsLogger<DbLoggerCategory.Database.Command> commandLogger);
+            IRelationalCommandDiagnosticsLogger commandLogger);
     }
 
     public class AseSequenceValueGeneratorFactory : IAseSequenceValueGeneratorFactory
@@ -52,7 +52,7 @@ namespace EntityFrameworkCore.Ase.Internal.ExpressionTranslators
             AseSequenceValueGeneratorState generatorState,
             IAseConnection connection,
             IRawSqlCommandBuilder rawSqlCommandBuilder,
-            IDiagnosticsLogger<DbLoggerCategory.Database.Command> commandLogger)
+            IRelationalCommandDiagnosticsLogger commandLogger)
         {
             var type = property.ClrType.UnwrapNullableType().UnwrapEnumType();
 

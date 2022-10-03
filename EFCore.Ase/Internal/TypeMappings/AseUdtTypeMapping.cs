@@ -91,10 +91,9 @@ namespace EntityFrameworkCore.Ase.Internal.TypeMappings
 
         private void SetUdtTypeName(DbParameter parameter)
         {
-            NonCapturingLazyInitializer.EnsureInitialized(
+            LazyInitializer.EnsureInitialized(
                 ref _udtTypeNameSetter,
-                parameter.GetType(),
-                CreateUdtTypeNameAccessor);
+                () => CreateUdtTypeNameAccessor(parameter.GetType()));
 
             if (parameter.Value != null
                 && parameter.Value != DBNull.Value)

@@ -58,10 +58,7 @@ namespace EntityFrameworkCore.Ase.Internal
 
             conventionSet.EntityTypeBaseTypeChangedConventions.Add(aseIndexConvention);
 
-            ConventionSet.AddBefore(
-                conventionSet.ModelFinalizedConventions,
-                valueGenerationStrategyConvention,
-                typeof(ValidatingConvention));
+            conventionSet.ModelFinalizingConventions.Add(valueGenerationStrategyConvention);
 
             //conventionSet.IndexAddedConventions.Add(AseInMemoryTablesConvention);
             conventionSet.IndexAddedConventions.Add(aseIndexConvention);

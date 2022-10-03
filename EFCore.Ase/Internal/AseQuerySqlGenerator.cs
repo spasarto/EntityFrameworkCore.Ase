@@ -25,10 +25,7 @@ namespace EntityFrameworkCore.Ase.Internal
             {
                 Sql.Append(" TOP ");
 
-                if (selectExpression.Limit is SqlConstantExpression constantExpression)
-                {
-                    Sql.Append(constantExpression.Value);
-                }
+                Visit(selectExpression.Limit);
 
                 Sql.Append(" ");
             }
@@ -37,10 +34,7 @@ namespace EntityFrameworkCore.Ase.Internal
             {
                 Sql.Append(" START AT ");
 
-                if (selectExpression.Offset is SqlConstantExpression constantExpression)
-                {
-                    Sql.Append(constantExpression.Value);
-                }
+                Visit(selectExpression.Limit);
 
                 Sql.Append(" ");
             }

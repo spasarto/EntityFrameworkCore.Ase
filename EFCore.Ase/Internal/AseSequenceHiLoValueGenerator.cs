@@ -18,7 +18,7 @@ namespace EntityFrameworkCore.Ase.Internal
         private readonly IAseUpdateSqlGenerator _sqlGenerator;
         private readonly IAseConnection _connection;
         private readonly ISequence _sequence;
-        private readonly IDiagnosticsLogger<DbLoggerCategory.Database.Command> _commandLogger;
+        private readonly IRelationalCommandDiagnosticsLogger _commandLogger;
 
         /// <summary>
         ///     This is an internal API that supports the Entity Framework Core infrastructure and not subject to
@@ -31,7 +31,7 @@ namespace EntityFrameworkCore.Ase.Internal
              IAseUpdateSqlGenerator sqlGenerator,
              AseSequenceValueGeneratorState generatorState,
              IAseConnection connection,
-             IDiagnosticsLogger<DbLoggerCategory.Database.Command> commandLogger)
+             IRelationalCommandDiagnosticsLogger commandLogger)
             : base(generatorState)
         {
             _sequence = generatorState.Sequence;
@@ -54,9 +54,10 @@ namespace EntityFrameworkCore.Ase.Internal
                     .ExecuteScalar(
                         new RelationalCommandParameterObject(
                             _connection,
-                            null,
-                            null,
-                            _commandLogger)),
+                            parameterValues: null,
+                            readerColumns: null,
+                            context: null,
+                            _commandLogger, CommandSource.ValueGenerator)),
                 typeof(long),
                 CultureInfo.InvariantCulture);
 
@@ -73,9 +74,10 @@ namespace EntityFrameworkCore.Ase.Internal
                     .ExecuteScalarAsync(
                         new RelationalCommandParameterObject(
                             _connection,
-                            null,
-                            null,
-                            _commandLogger),
+                            parameterValues: null,
+                            readerColumns: null,
+                            context: null,
+                            _commandLogger, CommandSource.ValueGenerator),
                         cancellationToken),
                 typeof(long),
                 CultureInfo.InvariantCulture);
