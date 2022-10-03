@@ -10,7 +10,7 @@
     <PackageTags>EntityFrameworkCore ASE Sybase</PackageTags>
     <PackageLicenseUrl>https://opensource.org/licenses/MIT</PackageLicenseUrl>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
-    <PackageReleaseNotes>Fixed a bug with guid contains</PackageReleaseNotes>
+    <PackageReleaseNotes>Upgraded to net 6.0.9</PackageReleaseNotes>
     <PackageProjectUrl>https://github.com/spasarto/EntityFrameworkCore.Ase</PackageProjectUrl>
     <Authors>Adam Johnson</Authors>
     <ImplicitUsings>true</ImplicitUsings>
